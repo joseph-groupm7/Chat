@@ -1,0 +1,11 @@
+{
+  "name": "Node-Chat",
+  "main": "server.js",
+  "dependencies": {
+    "express": "~4.0.0",
+    "body-parser": "~1.0.0",
+    "method-override": "~1.0.0",
+    "socket.io": "*",
+    "lodash-node": "^2.4.1"
+  }
+}

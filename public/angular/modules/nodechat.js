@@ -1,0 +1,1 @@
+var nodechat = angular.module("nodechat", []);
