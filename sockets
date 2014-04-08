@@ -1,0 +1,87 @@
+/*
+// Socket Events
+// The "connection" event creates the socket, so all the events tied to that socket
+// need to be defined here.
+io.sockets.on("connection", function(socket) {
+	socket.on("adminConnect", function(data, callback) {
+		// Admins need to be verified in some way.
+		// Token? Password? Username -> Database check?
+		// TODO: Implement this check
+		admins.push({id: socket.id, username: data.username});
+		socket.join(ADMIN_CHANNEL);
+		adminConnectAlert(socket.id, data.username);
+		callback(socket.id);
+	});
+
+	socket.on("chatConnect", function(data, callback) {
+		userPool.push({id: socket.id, username: data.username});
+		userConnectAlert(socket.id, data.username);
+		callback(socket.id);
+	});
+
+	socket.on("requestAdminListSync", function(data, callback) {
+		console.log("An admin has requested an admin list sync.");
+		callback(admins);
+	});
+
+	socket.on("requestUserListSync", function(data, callback) {
+		console.log("An admin has requested a user list sync.");
+		callback(userPool);
+	});
+
+	socket.on("adminConnectToUser", function(data, callback) {
+		// Get the user and admin, then put them in a room.
+		var userIndex = _.findIndex(userPool, {id: data.user});
+		var roomname = data.user + "_" + data.admin;
+
+		rooms.push({roomID: roomname, userID: data.user, admins: [data.admin]});
+		io.sockets.socket(data.user).join(roomname);
+		io.sockets.socket(data.admin).join(roomname);
+
+		// Disconnect the user from the User Pool
+		userDisconnectAlert(userIndex);
+		var temp = userPool.splice(userIndex, 1);
+
+		callback(roomname, data.user, temp.username);
+	});
+
+	socket.on("disconnect", function(data) {
+		// There's probably a better way to do this...
+		var userIndex = _.findIndex(userPool, {id: socket.id});
+		var adminIndex = _.findIndex(admins, {id: socket.id});
+
+		if (userIndex != -1 && adminIndex == -1) {
+			userDisconnectAlert(userIndex);
+			userPool.splice(userIndex, 1);
+		}
+		else if (userIndex == -1 && adminIndex != -1) {
+			adminDisconnectAlert(adminIndex);
+			admins.splice(adminIndex, 1);
+		}
+		else {
+			console.log("There was an error or disruption in service. The disconnecting socket was not found in memory.");
+		}
+	});
+});
+
+// Helper functions for emitting messages
+function userConnectAlert(cliendID, clientUsername) {
+	io.sockets.in(ADMIN_CHANNEL).emit('userConnection', {id: cliendID, username: clientUsername});
+	console.log("Emitting alert to admins that a user has joined.");
+}
+
+function adminConnectAlert(adminID, adminUsername) {
+	io.sockets.in(ADMIN_CHANNEL).emit('adminConnection', {id: adminID, username: adminUsername});
+	console.log("Emitting alert to other admins that a new admin has joined.");
+}
+
+function userDisconnectAlert(index) {
+	io.sockets.in(ADMIN_CHANNEL).emit('userDisconnect', {id: userPool[index].id, username: userPool[index].username});
+	console.log("A user is disconnecting.");
+}
+
+function adminDisconnectAlert(index) {
+	io.sockets.in(ADMIN_CHANNEL).emit('adminDisconnect', {id: admins[index].id, username: admins[index].username});
+	console.log("An admin is disconnecting.");
+}
+*/
