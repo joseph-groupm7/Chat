@@ -12,9 +12,11 @@ var User  = require("./objects/user.js");
 var Admin = require("./objects/admin.js");
 var Room  = require("./objects/room.js");
 var Chat  = require("./objects/chat.js");
+var Log   = require("./objects/logger.js");
 
 // Server Routes
 var routes = require("./routes");
+var socket = require("./socket/socketRoutes.js");
 
 // App Configuration
 app.use(bodyParser());
@@ -27,23 +29,33 @@ app.get("/client", routes.client.sendChatClient);
 app.get("/admin", routes.admin.sendChatClient);
 app.get("/debug", routes.debug.showStats);
 
-var userA = new User("123456", "Joseph Walker");
-var userB = new User("654321", "Shmoseph Shmalker");
-var idlePool = new Room("idle_users", {});
+// Persistent server variables
+var debug              = new Log();
+var idleUserPool       = new Room("idle_users", {});
+var connectedAdminPool = new Room("admins", {});
+var chat               = new Chat({});
+	chat.addRoom(idleUserPool);
+	chat.addRoom(connectedAdminPool);
 
-idlePool.addClient(userA);
-idlePool.addClient(userB);
+/*
+ * This is where the Socket code starts.
+ */
+io.sockets.on("connection", function(socket) {
+	socket.on("userConnect", function(data) {
+		debug.log("A user has connected: " + data.username, socket.id);
+	});
 
-var chat = new Chat({});
-chat.addRoom(idlePool);
-
-chat.getRoom("idle_users").addClient(new User("555", "Jason Hurley"));
-chat.getRoom("idle_users").removeClientByID("123456");
-console.log(chat.getRoom("idle_users").getConnectedSockets());
+	socket.on("adminConnect", function(data) {
+		debug.log("An admin has connected: " + data.username, socket.id);
+	});
+});
+/*
+ * This is where the Socket code stops.
+ */
 
 // Tell express to use the /public directory as the default for static files
 app.use(express.static(__dirname + '/public'));
 
-console.log("Server running on port 7020. Socket Server listening on port 7040.");
+debug.log("The server has started. Running HTTP on port 7020 and Websocket on port 7040.");
 app.listen(7020);
 http.listen(7040);
