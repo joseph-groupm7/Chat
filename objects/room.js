@@ -1,9 +1,11 @@
 var _ = require('lodash-node');
 
 // The Client collection wrapper
-function Room(list) {
+function Room(id, list) {
+	this.room_id = id;
 	this.connected_clients = list;
 }
+Room.prototype.room_id = "";
 Room.prototype.connected_clients = {};
 Room.prototype.addClient = function(client) {
 	this.connected_clients[client.socket_id] = client;

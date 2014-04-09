@@ -11,6 +11,7 @@ var io               = require('socket.io').listen(http, {log: false}); // Attac
 var User  = require("./objects/user.js");
 var Admin = require("./objects/admin.js");
 var Room  = require("./objects/room.js");
+var Chat  = require("./objects/chat.js");
 
 // Server Routes
 var routes = require("./routes");
@@ -25,6 +26,20 @@ app.use(methodOverride());
 app.get("/client", routes.client.sendChatClient);
 app.get("/admin", routes.admin.sendChatClient);
 app.get("/debug", routes.debug.showStats);
+
+var userA = new User("123456", "Joseph Walker");
+var userB = new User("654321", "Shmoseph Shmalker");
+var idlePool = new Room("idle_users", {});
+
+idlePool.addClient(userA);
+idlePool.addClient(userB);
+
+var chat = new Chat({});
+chat.addRoom(idlePool);
+
+chat.getRoom("idle_users").addClient(new User("555", "Jason Hurley"));
+chat.getRoom("idle_users").removeClientByID("123456");
+console.log(chat.getRoom("idle_users").getConnectedSockets());
 
 // Tell express to use the /public directory as the default for static files
 app.use(express.static(__dirname + '/public'));
