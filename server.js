@@ -41,12 +41,37 @@ var chat               = new Chat({});
  * This is where the Socket code starts.
  */
 io.sockets.on("connection", function(socket) {
+	/*
+	 * Emitted by the client chat on login
+	 * Data:
+	 * @username -> Client's username
+	 */
 	socket.on("userConnect", function(data) {
 		debug.log("A user has connected: " + data.username, socket.id);
+		chat.getRoom("idle_users").addClient(new User(socket.id, data.username));
 	});
 
+	/*
+	 * Emitted by the admin chat on login
+	 * Data:
+	 * @username -> Admin's Username
+	 * @token -> Admin login token to prevent users from jumping into the admin pool
+	 */
 	socket.on("adminConnect", function(data) {
 		debug.log("An admin has connected: " + data.username, socket.id);
+		chat.getRoom("admins").addClient(new Admin(socket.id, data.username));
+	});
+
+	/*
+	 * Emitted by an admin when they connect to a user
+	 * Data:
+	 * @user_id -> The ID of the user to pull into the admin's room
+	 */
+	socket.on("admin_connect_to_user", function(data) {
+		var admin = chat.getRoom("admins").getClient(socket.id);
+		var user  = chat.getRoom("idle_users").getClient(data.user_id);
+
+		chat.addRoom(new Room(admin.socket_id + "_" + user.socket_id, {}));
 	});
 });
 /*
