@@ -1,0 +1,16 @@
+<table class="chat-list-table">
+	<thead>
+		<tr>
+			<th>Customer</th>
+			<th>Last Message</th>
+			<th class="text-right">Last Activity</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="chat in chatList.getChatList()">
+			<td>{{chat.getClientUsername()}}</td>
+			<td>{{chat.getLastMessageBody()}}</td>
+			<td align="right">{{chat.getLastActivity()}}</td>
+		</tr>
+	</tbody>
+</table>

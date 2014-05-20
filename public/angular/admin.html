@@ -8,14 +8,18 @@
 		<link rel="stylesheet" href="/css/admin/admin.css">
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+		<script src="https://code.angularjs.org/1.2.16/angular-route.min.js"></script>
 		<script src="http://localhost:7040/primus/primus.io.js"></script>
 		<script src="/foundation/js/foundation.min.js"></script>
 		<!-- Layout files -->
 
 		<!-- Chat Client JS Files -->
-		<script src="/angular/modules/nodechat.js"></script>
+		<script src="/angular/modules/nodechatAdmin.js"></script>
 		<script src="/angular/controllers/adminController.js"></script>
+		<script src="/angular/controllers/admin/chatController.js"></script>
 		<script src="/angular/services/socketService.js"></script>
+		<script src="/angular/services/admin/adminChatList.js"></script>
+		<script src="/angular/directives/conversation.js"></script>
 		<!-- Chat Client JS Files -->
 
 		<script>
@@ -33,7 +37,6 @@
 					<h1><a href="#">Admin Panel</a></h1>
 				</li>
 			</ul>
-
 			<section class="top-bar-section">
 				<!-- Right Nav Section -->
 				<ul class="right">
@@ -52,62 +55,26 @@
 			</div>
 			<div id="content-container">
 				<div class="chats-list">
-					<table class="chat-list-table">
-						<thead>
-							<tr>
-								<th>Customer</th>
-								<th>Last Message</th>
-								<th class="text-right">Last Activity</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr class="active">
-								<td>John Doe</td>
-								<td>Lorem ipsum dolor ist amet...</td>
-								<td align="right">5/19/2014 at 4:42 PM</td>
-							</tr>
-							<tr>
-								<td>Alan Doe</td>
-								<td>Lorem ipsum dolor ist amet...</td>
-								<td align="right">5/19/2014 at 4:39 PM</td>
-							</tr>
-							<tr>
-								<td>Jane Doe</td>
-								<td>Lorem ipsum dolor ist amet...</td>
-								<td align="right">5/19/2014 at 4:22 PM</td>
-							</tr>
-						</tbody>
-					</table>
+					<ng-view></ng-view>
 				</div>
-				<div class="chat-content">
-					<ul class="conversation">
-						<li class="admin">Lorem ipsum dolor sit amet</li>
-						<li class="client">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-						tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-						quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-						consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-						cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-						proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</li>
-						<li class="client">Lorem ispum dolor sit amet</li>
-						<li class="admin">Lorem ipsum sit amet</li>
-						<li class="client">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-						tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</li>
-					</ul>
+				<div class="chat-content" ng-controller="chatController">
+					<div id="chat-overflow">
+						<conversation source="chatList.getActiveChat()"></conversation>
+					</div>
 					<div id="message-window" class="row collapse">
 						<div class="small-11 columns">
-							<input type="text" placeholder="Type in your message..." />
+							<input type="text" placeholder="Type in your message..." ng-model="response" />
 						</div>
 						<div class="small-1 columns">
-							<a href="#" class="button postfix"><i class="fa fa-reply"></i></a>
+							<a class="button postfix" ng-click="sendMessage()">
+								<i class="fa fa-reply"></i>
+							</a>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<!-- Chat Client HTML -->
-		<!--
-		<img src="http://www.buffaloshooter.com/assets/madeforIE.gif" style="position: fixed; z-index: 999; bottom: 5px; left: 5px;" />
-		<img src="http://www.w3.org/html/logo/downloads/HTML5_Logo_256.png" style="position: fixed; z-index: 999; bottom: 85px; left: 0px; width: 50px; height: 50px;" />
-		-->
+
 	</body>
 </html>

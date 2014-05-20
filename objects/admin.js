@@ -1,9 +1,20 @@
 // Admin Sub Object
-function Admin(socket_id, username) {
-	this.socket_id = socket_id;
+function Admin(connection, username) {
+	this.id = connection.id;
+	this.connection = connection;
 	this.username = username;
 }
-Admin.prototype.socket_id = "";
+
+Admin.prototype.id = "";
+Admin.prototype.connection = "";
 Admin.prototype.username = "";
+
+Admin.prototype.getConnection = function() {
+	return this.connection;
+};
+
+Admin.prototype.getID = function() {
+	return this.id;
+};
 
 module.exports = Admin;

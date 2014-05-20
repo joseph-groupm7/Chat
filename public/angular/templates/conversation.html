@@ -1,0 +1,5 @@
+<ul class="conversation">
+	<li ng-repeat="message in source.getMessageList()" class="{{message.getUser()}}">
+		{{message.getBody()}}
+	</li>
+</ul>

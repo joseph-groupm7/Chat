@@ -7,8 +7,11 @@ function Room(id, list) {
 }
 Room.prototype.room_id = "";
 Room.prototype.connected_clients = {};
+
 Room.prototype.addClient = function(client) {
-	this.connected_clients[client.socket_id] = client;
+	this.connected_clients[client.getID()] = client;
+	var room = this.room_id;
+	client.getConnection().join(room);
 };
 Room.prototype.getClient = function(id) {
 	var client;
@@ -36,7 +39,7 @@ Room.prototype.removeClientByID = function(id) {
 Room.prototype.getConnectedSockets = function() {
 	var socketList = [];
 	_.forEach(this.connected_clients, function(client) {
-		socketList.push(client.socket_id);
+		socketList.push(client.id);
 	});
 	return socketList;
 };

@@ -42,15 +42,33 @@ var chat               = new Chat({});
  */
 
 primus.on("connection", function(connection) {
-	debug.log("A user has connected.");
-
-	connection.on("userConnect", function(data) {
-		var newUser = new User(data.username);
-		chat.getRoom("idleUsers").addClient(newUser);
+	connection.on("userConnect", function(data, callback) {
 		debug.log("A user was added to the idle pool.");
+
+		var newUser = new User(connection.id, data.username);
+		chat.getRoom("idleUsers").addClient(newUser);
+
+		callback(connection.id);
 	});
 
+	connection.on("adminConnect", function(data, callback) {
+		debug.log("A new admin has connected.");
+		connection.setUsername("This is only a test.");
+		console.log(connection.getUsername());
+		console.log(connection);
 
+		var newAdmin = new Admin(connection, data.username);
+		chat.getRoom("admins").addClient(newAdmin);
+		connection.room("admins").except(connection.id).send("newAdminConnect", {data: "Hello"});
+
+		callback(connection.id);
+	});
+
+	connection.on("sendMessage", function(data, callback) {
+		debug.log("A message was received: " + data.body + " -> Message from connection ID " + connection.id);
+		debug.log("The message was sent to room ID " + data.roomID);
+		callback(true);
+	});
 });
 
 /*

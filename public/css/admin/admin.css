@@ -3519,6 +3519,13 @@ th.hide-for-touch {
   #message-window a {
     margin: 0; }
 
+#chat-overflow {
+  height: 100%;
+  overflow-y: scroll;
+  position: absolute;
+  width: 100%;
+  padding-bottom: 42px; }
+
 .chats-list {
   padding-left: 0.9375rem;
   padding-right: 0.9375rem;
