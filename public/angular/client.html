@@ -3,7 +3,7 @@
 	<head>
 		<title>Client Chat Server</title>
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
-		<script src="http://localhost:7040/socket.io/socket.io.js"></script>
+		<script src="http://localhost:7040/primus/primus.io.js"></script>
 
 		<!-- Chat Client JS Files -->
 		<script src="/angular/modules/nodechat.js"></script>
@@ -12,22 +12,10 @@
 		<!-- Chat Client JS Files -->
 	</head>
 	<body>
-
 		<!-- Chat Client HTML -->
 		<div id="client-chat" ng-app="nodechat" ng-controller="clientController">
-			<div id="setup" ng-if="!isConnected()">
-				<label>Username:</label>
-				<input type="text" ng-model="clientInformation.username" />
-				<button ng-click="setUsername()">Connect</button>
-			</div>
-			<div id="chat-window" ng-if="isConnected()">
-				<input type="text" ng-model="message" />
-				<button ng-click="sendMessage()">Send</button>
-			</div>
-
-			<pre>My Client Information: {{clientInformation | json}}</pre>
+			<button ng-click="setUsername()">Connect</button>
 		</div>
 		<!-- Chat Client HTML -->
-
 	</body>
 </html>

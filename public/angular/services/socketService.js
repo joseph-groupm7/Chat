@@ -1,31 +1,30 @@
 nodechat.service("socketService", ["$rootScope", function($rootScope) {
-	var socket;
+	var open = false;
+	var primus = null;
 
 	this.connect = function() {
-		socket = io.connect('http://localhost:7040');
+		if (!open) {
+			primus = new Primus("http://localhost:7040", {});
+			open = true;
+		}
 	};
 	this.bind = function(event, callback) {
-		socket.on(event, function() {
+		primus.on(event, function() {
 			var args = arguments;
-			callback.apply(socket, args);
+			callback.apply(primus, args);
 			$rootScope.$apply();
 		});
 	};
 	this.emit = function(eventName, data, callback) {
-		socket.emit(eventName, data, function() {
+		primus.send(eventName, data, function() {
 			if (callback) {
 				var args = arguments;
-				callback.apply(socket, args);
+				callback.apply(primus, args);
 				$rootScope.$apply();
 			}
-		})
+		});
 	};
 	this.isConnected = function() {
-		if (socket) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		return open;
 	};
 }]);

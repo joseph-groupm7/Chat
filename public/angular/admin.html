@@ -2,50 +2,112 @@
 <html>
 	<head>
 		<title>Admin Chat Server</title>
-		<link type="text/css" rel="stylesheet" href="/css/admin.css">
+		<!-- Layout files -->
 		<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+		<link rel="stylesheet" href="/foundation/css/normalize.css">
+		<link rel="stylesheet" href="/css/admin/admin.css">
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
-		<script src="http://localhost:7040/socket.io/socket.io.js"></script>
+		<script src="http://localhost:7040/primus/primus.io.js"></script>
+		<script src="/foundation/js/foundation.min.js"></script>
+		<!-- Layout files -->
 
 		<!-- Chat Client JS Files -->
 		<script src="/angular/modules/nodechat.js"></script>
 		<script src="/angular/controllers/adminController.js"></script>
 		<script src="/angular/services/socketService.js"></script>
 		<!-- Chat Client JS Files -->
+
+		<script>
+			$(function() {
+				$(document).foundation();
+			});
+		</script>
 	</head>
 	<body ng-app="nodechat" ng-controller="adminController">
 
 		<!-- Chat Client HTML -->
-		<div id="setup" ng-if="!isConnected()">
-			<label>Username:</label>
-			<input type="text" ng-model="adminInformation.username" />
-			<button ng-click="setUsername()">Connect</button>
-		</div>
-		<div id="admin-chat-client" ng-if="isConnected()">
-			<div id="admin-chat-sidebar">
-				<h2>Users Waiting</h2>
-				<ul id="idle-users">
-					<li ng-repeat="user in connectedUsers">
-						<a href='#' ng-click='initiateConversation(user.id)'>{{user.username}}</a>
-					</li>
-				</ul>
-				<h2>Ongoing Conversations</h2>
-				<ul id="active-conversations">
+		<nav class="top-bar" data-topbar>
+			<ul class="title-area">
+				<li class="name">
+					<h1><a href="#">Admin Panel</a></h1>
+				</li>
+			</ul>
 
+			<section class="top-bar-section">
+				<!-- Right Nav Section -->
+				<ul class="right">
+					<li class="active"><a href='#' class="no-hover">Logged in as Joe Bloe</li>
+					<li><a href="#">Logout</a></li>
+				</ul>
+			</section>
+		</nav>
+		<div id="body-container">
+			<div id="side-nav">
+				<ul id="side-nav-menu">
+					<li><a href='#'><i class="fa fa-users"></i>&nbsp;Idle Users</a></li>
+					<li class="active"><a href='#'><i class="fa fa-comments"></i>&nbsp;Ongoing Chat</a></li>
+					<li><a href='#'><i class="fa fa-star"></i>&nbsp;Active Admins</a></li>
 				</ul>
 			</div>
-			<div id="admin-chat-container">
-				<div class="admin-chat">
-					<h2><a href="#"><i class="fa fa-times close"></i></a></h2>
-						<pre>{{ongoingConversations | json}}</pre>
-					<div class="chat-controls">
-						<textarea></textarea>
-						<button class="send">Send</button>
+			<div id="content-container">
+				<div class="chats-list">
+					<table class="chat-list-table">
+						<thead>
+							<tr>
+								<th>Customer</th>
+								<th>Last Message</th>
+								<th class="text-right">Last Activity</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="active">
+								<td>John Doe</td>
+								<td>Lorem ipsum dolor ist amet...</td>
+								<td align="right">5/19/2014 at 4:42 PM</td>
+							</tr>
+							<tr>
+								<td>Alan Doe</td>
+								<td>Lorem ipsum dolor ist amet...</td>
+								<td align="right">5/19/2014 at 4:39 PM</td>
+							</tr>
+							<tr>
+								<td>Jane Doe</td>
+								<td>Lorem ipsum dolor ist amet...</td>
+								<td align="right">5/19/2014 at 4:22 PM</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="chat-content">
+					<ul class="conversation">
+						<li class="admin">Lorem ipsum dolor sit amet</li>
+						<li class="client">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+						tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+						quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+						consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+						cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+						proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</li>
+						<li class="client">Lorem ispum dolor sit amet</li>
+						<li class="admin">Lorem ipsum sit amet</li>
+						<li class="client">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+						tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</li>
+					</ul>
+					<div id="message-window" class="row collapse">
+						<div class="small-11 columns">
+							<input type="text" placeholder="Type in your message..." />
+						</div>
+						<div class="small-1 columns">
+							<a href="#" class="button postfix"><i class="fa fa-reply"></i></a>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<!-- Chat Client HTML -->
-
+		<!--
+		<img src="http://www.buffaloshooter.com/assets/madeforIE.gif" style="position: fixed; z-index: 999; bottom: 5px; left: 5px;" />
+		<img src="http://www.w3.org/html/logo/downloads/HTML5_Logo_256.png" style="position: fixed; z-index: 999; bottom: 85px; left: 0px; width: 50px; height: 50px;" />
+		-->
 	</body>
 </html>

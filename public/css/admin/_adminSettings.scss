@@ -1,0 +1,17 @@
+// Background color for the top bar
+$topbar-bg-color: #3a4765;
+$topbar-bg: $topbar-bg-color;
+
+// Height and margin
+$topbar-height: 60px;
+$topbar-margin-bottom: 0;
+
+// Controlling the styles for the title in the top bar
+$topbar-title-weight: lighter;
+$topbar-title-font-size: 24px;
+
+$topbar-link-weight: normal;
+$topbar-link-font-size: 14px;
+$topbar-link-hover-lightness: 10%; // Darken by 10%
+$topbar-link-bg-hover: darken($topbar-bg-color, $topbar-link-hover-lightness);
+$topbar-link-bg-active: $primary-color;

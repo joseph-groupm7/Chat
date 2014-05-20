@@ -17,13 +17,13 @@ nodechat.controller("adminController", ["$scope", "socketService", function($sco
 	};
 
 	$scope.initiateConversation = function(userID) {
-		socket.emit("adminConnectToUser", {admin: $scope.adminInformation.id, user: userID}, function(roomName, userID, username) {
-			$scope.ongoingConversations.push({room: roomName, userID: userID, username: username});
-		});
+
 	};
 
 	function connect() {
-		socket.connect();
+		if (!$scope.isConnected()) {
+			socket.connect();
+		}
 		socket.emit("adminConnect", {username: $scope.adminInformation.username}, function(userID) {
 			$scope.adminInformation.id = userID;
 			synchronizeAdminList();
@@ -48,18 +48,6 @@ nodechat.controller("adminController", ["$scope", "socketService", function($sco
 		socket.bind("userDisconnect", function(user) {
 			var index = $scope.connectedUsers.indexOf(user);
 			$scope.connectedUsers.splice(index, 1);
-		});
-	}
-
-	function synchronizeAdminList() {
-		socket.emit("requestAdminListSync", {}, function(adminList) {
-			$scope.connectedAdmins = adminList;
-		});
-	}
-
-	function synchronizeUserList() {
-		socket.emit("requestUserListSync", {}, function(userList) {
-			$scope.connectedUsers = userList;
 		});
 	}
 }]);
