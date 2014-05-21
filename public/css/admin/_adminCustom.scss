@@ -126,6 +126,7 @@ $admin-bg-color: #a7fffd;
 	tbody {
 		tr {
 			background-color: $chat-list-bg-color;
+			cursor: pointer;
 		}
 		tr:nth-of-type(even) {
 			background-color: darken($chat-list-bg-color, 5%);

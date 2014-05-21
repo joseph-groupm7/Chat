@@ -6,12 +6,17 @@
 		<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 		<link rel="stylesheet" href="/foundation/css/normalize.css">
 		<link rel="stylesheet" href="/css/admin/admin.css">
+		<link rel="stylesheet" href="/css/admin/animations.css">
+		<!-- Layout files -->
+
+		<!-- Required Files -->
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
-		<script src="https://code.angularjs.org/1.2.16/angular-route.min.js"></script>
+		<script src="https://code.angularjs.org/1.2.15/angular-route.min.js"></script>
+		<script src="https://code.angularjs.org/1.2.15/angular-animate.min.js"></script>
 		<script src="http://localhost:7040/primus/primus.io.js"></script>
 		<script src="/foundation/js/foundation.min.js"></script>
-		<!-- Layout files -->
+		<!-- Required Files -->
 
 		<!-- Chat Client JS Files -->
 		<script src="/angular/modules/nodechatAdmin.js"></script>
@@ -31,6 +36,8 @@
 	<body ng-app="nodechat" ng-controller="adminController">
 
 		<!-- Chat Client HTML -->
+
+		<!-- Navigation -->
 		<nav class="top-bar" data-topbar>
 			<ul class="title-area">
 				<li class="name">
@@ -38,25 +45,43 @@
 				</li>
 			</ul>
 			<section class="top-bar-section">
-				<!-- Right Nav Section -->
 				<ul class="right">
 					<li class="active"><a href='#' class="no-hover">Logged in as Joe Bloe</li>
 					<li><a href="#">Logout</a></li>
 				</ul>
 			</section>
 		</nav>
+		<!-- Navigation -->
+
+		<!-- Body -->
 		<div id="body-container">
+
+			<!-- Side Buttons -->
 			<div id="side-nav">
 				<ul id="side-nav-menu">
-					<li><a href='#'><i class="fa fa-users"></i>&nbsp;Idle Users</a></li>
-					<li class="active"><a href='#'><i class="fa fa-comments"></i>&nbsp;Ongoing Chat</a></li>
-					<li><a href='#'><i class="fa fa-star"></i>&nbsp;Active Admins</a></li>
+					<li ng-class="{active: location.url() == '/idleUsers'}">
+						<a ng-href='#/idleUsers'><i class="fa fa-users"></i>&nbsp;Idle Users</a>
+					</li>
+					<li ng-class="{active: location.url() == '/activeChats'}">
+						<a ng-href='#/activeChats'><i class="fa fa-comments"></i>&nbsp;Ongoing Chat</a>
+					</li>
+					<li ng-class="{active: location.url() == '/activeAdmins'}">
+						<a ng-href='#/activeAdmins'><i class="fa fa-star"></i>&nbsp;Active Admins</a>
+					</li>
 				</ul>
 			</div>
+			<!-- Side Buttons -->
+
+			<!-- Content Pane -->
 			<div id="content-container">
+
+				<!-- List View -->
 				<div class="chats-list">
 					<ng-view></ng-view>
 				</div>
+				<!-- List View -->
+
+				<!-- Chat Window -->
 				<div class="chat-content" ng-controller="chatController">
 					<div id="chat-overflow">
 						<conversation source="chatList.getActiveChat()"></conversation>
@@ -72,8 +97,14 @@
 						</div>
 					</div>
 				</div>
+				<!-- Chat Window -->
+
 			</div>
+			<!-- Content Pane -->
+
 		</div>
+		<!-- Body -->
+
 		<!-- Chat Client HTML -->
 
 	</body>

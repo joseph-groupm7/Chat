@@ -9,11 +9,15 @@ var Spark          = require('primus.io'); // Include the Primus library...
 var primus         = new Spark(http, {parser: 'JSON', transformer: 'engine.io'}); // ...then use it to wrap Engine.IO
 
 // Server Helper Objects
-var User  = require("./objects/user.js");
-var Admin = require("./objects/admin.js");
-var Room  = require("./objects/room.js");
-var Chat  = require("./objects/chat.js");
-var Log   = require("./objects/logger.js");
+var Client = require("./objects/sparkClient.js");
+var Room   = require("./objects/room.js");
+var Chat   = require("./objects/chat.js");
+var Log    = require("./objects/logger.js");
+
+// Set up some useful properties on the Connection object that will greatly simplify working with connections
+primus.use("client", {
+	server: Client
+});
 
 // Server Routes
 var routes = require("./routes");
@@ -45,21 +49,19 @@ primus.on("connection", function(connection) {
 	connection.on("userConnect", function(data, callback) {
 		debug.log("A user was added to the idle pool.");
 
-		var newUser = new User(connection.id, data.username);
-		chat.getRoom("idleUsers").addClient(newUser);
+		connection.setUsername(data.username);
+		connection.setAdmin(false);
+		chat.getRoom("idleUsers").addClient(connection);
 
 		callback(connection.id);
 	});
 
 	connection.on("adminConnect", function(data, callback) {
 		debug.log("A new admin has connected.");
-		connection.setUsername("This is only a test.");
-		console.log(connection.getUsername());
-		console.log(connection);
 
-		var newAdmin = new Admin(connection, data.username);
-		chat.getRoom("admins").addClient(newAdmin);
-		connection.room("admins").except(connection.id).send("newAdminConnect", {data: "Hello"});
+		connection.setUsername(data.username);
+		connection.setAdmin(true);
+		chat.getRoom("admins").addClient(connection).broadcast(connection, "newAdminConnect", {username: connection.getUsername(), id: connection.id}, true);
 
 		callback(connection.id);
 	});

@@ -10,6 +10,10 @@
     "require-directory": "^1.2.0",
     "primus": "^2.2.1",
     "engine.io": "^1.2.0",
-    "engine.io-client": "^1.2.0"
+    "engine.io-client": "^1.2.0",
+    "primus.io": "^3.1.1",
+    "primus-rooms": "^3.0.4",
+    "primus-multiplex": "^3.0.2",
+    "primus-emitter": "^3.0.2"
   }
 }

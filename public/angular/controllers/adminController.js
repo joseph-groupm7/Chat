@@ -1,6 +1,7 @@
-nodechat.controller("adminController", ["$scope", "socketService", "ChatList", function($scope, socket, chatList) {
+nodechat.controller("adminController", ["$scope", "socketService", "ChatList", "$location", function($scope, socket, chatList, $location) {
 	$scope.chatList = chatList;
-	$scope.username = "Joseph Walker";
+	$scope.username = "Joseph Walker"; // Temporary
+	$scope.location = $location;
 
 	$scope.init = function() {
 		socket.connect();

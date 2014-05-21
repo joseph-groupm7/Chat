@@ -1,4 +1,4 @@
-var nodechat = angular.module("nodechat", ["ngRoute"]);
+var nodechat = angular.module("nodechat", ["ngRoute", "ngAnimate"]);
 
 nodechat.config(["$routeProvider", "$locationProvider", function($routeProvider, $locationProvider) {
 	$routeProvider

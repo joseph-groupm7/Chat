@@ -2,20 +2,31 @@ var _ = require('lodash-node');
 
 // The Client collection wrapper
 function Room(id, list) {
-	this.room_id = id;
-	this.connected_clients = list;
+	this.roomID = id;
+	this.connectedClients = list;
 }
-Room.prototype.room_id = "";
-Room.prototype.connected_clients = {};
+Room.prototype.roomID = "";
+Room.prototype.connectedClients = {}; // This is an object, NOT an array. This is important.
 
+Room.prototype.getID = function() {
+	return this.roomID;
+};
 Room.prototype.addClient = function(client) {
-	this.connected_clients[client.getID()] = client;
-	var room = this.room_id;
-	client.getConnection().join(room);
+	this.connectedClients[client.id] = client;
+	client.join(this.roomID);
+	return this;
+};
+Room.prototype.broadcast = function(connection, event, data, ignore) {
+	if (ignore == true) {
+		connection.room(this.roomID).except(connection.id).send(event, data);
+	}
+	else {
+		connection.room(this.roomID).send(event, data);
+	}
 };
 Room.prototype.getClient = function(id) {
 	var client;
-	if ((client = this.connected_clients[id]) !== undefined) {
+	if ((client = this.connectedClients[id]) !== undefined) {
 		return client;
 	}
 	else {
@@ -23,7 +34,7 @@ Room.prototype.getClient = function(id) {
 	}
 };
 Room.prototype.removeClientByReference = function(client) {
-	var index = _.findKey(this.connected_clients, function(i) {
+	var index = _.findKey(this.connectedClients, function(i) {
 		return client == i;
 	});
 	if (index > 0) {
@@ -34,11 +45,11 @@ Room.prototype.removeClientByReference = function(client) {
 	}
 };
 Room.prototype.removeClientByID = function(id) {
-	return delete this.connected_clients[id];
+	return delete this.connectedClients[id];
 };
 Room.prototype.getConnectedSockets = function() {
 	var socketList = [];
-	_.forEach(this.connected_clients, function(client) {
+	_.forEach(this.connectedClients, function(client) {
 		socketList.push(client.id);
 	});
 	return socketList;

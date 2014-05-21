@@ -7,7 +7,10 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="chat in chatList.getChatList()">
+		<tr ng-repeat="chat in chatList.getChatList()"
+			ng-class="{active: chatList.getActiveChat() == chat}"
+			ng-click="chatList.setActiveChat(chat)">
+
 			<td>{{chat.getClientUsername()}}</td>
 			<td>{{chat.getLastMessageBody()}}</td>
 			<td align="right">{{chat.getLastActivity()}}</td>

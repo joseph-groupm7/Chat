@@ -4,7 +4,7 @@ function Chat(list) {
 }
 Chat.prototype.rooms = {};
 Chat.prototype.addRoom = function(room) {
-	this.rooms[room.room_id] = room;
+	this.rooms[room.getID()] = room;
 };
 Chat.prototype.getRoom = function(id) {
 	return this.rooms[id];
