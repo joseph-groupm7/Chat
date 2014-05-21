@@ -1,0 +1,17 @@
+<table class="chat-list-table">
+	<thead>
+		<tr>
+			<th>Admin</th>
+			<th class="text-right">Active Conversations</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="admin in adminList.getActiveAdmins()">
+			<td>{{admin.username}}</td>
+			<td align="right">{{admin.conversations}}</td>
+		</tr>
+		<tr ng-show="!adminList.getActiveAdmins().length">
+			<td colspan="2">No Active Admins</td>
+		</tr>
+	</tbody>
+</table>

@@ -1,7 +1,7 @@
 nodechat.controller("clientController", ["$scope", "socketService", function($scope, socket) {
 	$scope.clientInformation = {
 		username: "John Doe",
-		id: ""
+		serverID: ""
 	};
 
 	$scope.setUsername = function() {
@@ -15,7 +15,9 @@ nodechat.controller("clientController", ["$scope", "socketService", function($sc
 	function connect() {
 		if (!$scope.isConnected()) {
 			socket.connect();
-			socket.emit("userConnect", {username: $scope.clientInformation.username});
+			socket.emit("userConnect", {username: $scope.clientInformation.username}, function(response) {
+				$scope.clientInformation.serverID = response;
+			});
 		}
 	}
 }]);

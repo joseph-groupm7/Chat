@@ -1,5 +1,6 @@
 <ul class="conversation" id="conversation">
-	<li ng-repeat="message in source.getMessageList()" class="{{message.getUser()}} {{message.getUser() == 'admin' ? 'slide-right' : 'slide-left'}}">
+	<!-- For animations: {{message.getUser() == 'admin' ? 'slide-right' : 'slide-left'}} -->
+	<li ng-repeat="message in source.getMessageList()" class="{{message.getUser()}}">
 		{{message.getBody()}}
 	</li>
 </ul>

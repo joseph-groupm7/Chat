@@ -1,3 +1,6 @@
+// The chat controller handles the conversation portion of the control panel.
+// Any functionality related to the chat pane itself should go here.
+
 nodechat.controller("chatController", ["$scope", "socketService", "ChatList", function($scope, socket, chatList) {
 	$scope.response = "Hello";
 

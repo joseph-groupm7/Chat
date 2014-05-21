@@ -3485,6 +3485,13 @@ th.hide-for-touch {
       background-color: #191c20; }
     #side-nav-menu li.active {
       background-color: #1e2327; }
+  #side-nav-menu .nav-right {
+    float: right;
+    margin-right: 16px; }
+    #side-nav-menu .nav-right .count {
+      padding: 2px 4px;
+      background-color: #4b5b8c;
+      border-radius: 2px; }
 
 #content-container {
   position: absolute;
@@ -3560,6 +3567,8 @@ th.hide-for-touch {
     background-color: #f2f2f2; }
   .chat-list-table tbody tr.active {
     background-color: #a7fffd; }
+  .chat-list-table.clickable {
+    cursor: pointer; }
 
 .conversation {
   list-style: none;

@@ -20,10 +20,18 @@
 
 		<!-- Chat Client JS Files -->
 		<script src="/angular/modules/nodechatAdmin.js"></script>
-		<script src="/angular/controllers/adminController.js"></script>
-		<script src="/angular/controllers/admin/chatController.js"></script>
+
+		<script src="/angular/services/modelHelpers.js"></script>
 		<script src="/angular/services/socketService.js"></script>
 		<script src="/angular/services/admin/adminChatList.js"></script>
+		<script src="/angular/services/admin/adminIdleList.js"></script>
+		<script src="/angular/services/admin/adminAdminList.js"></script>
+
+		<script src="/angular/controllers/admin/adminController.js"></script>
+		<script src="/angular/controllers/admin/chatController.js"></script>
+		<script src="/angular/controllers/admin/idleController.js"></script>
+		<script src="/angular/controllers/admin/activeAdminsController.js"></script>
+
 		<script src="/angular/directives/conversation.js"></script>
 		<!-- Chat Client JS Files -->
 
@@ -60,13 +68,19 @@
 			<div id="side-nav">
 				<ul id="side-nav-menu">
 					<li ng-class="{active: location.url() == '/idleUsers'}">
-						<a ng-href='#/idleUsers'><i class="fa fa-users"></i>&nbsp;Idle Users</a>
+						<a ng-href='#/idleUsers'><i class="fa fa-users"></i>&nbsp;Idle Users
+							<div class="nav-right"><span class="count">{{idleUsersCount()}}</span></div>
+						</a>
 					</li>
 					<li ng-class="{active: location.url() == '/activeChats'}">
-						<a ng-href='#/activeChats'><i class="fa fa-comments"></i>&nbsp;Ongoing Chat</a>
+						<a ng-href='#/activeChats'><i class="fa fa-comments"></i>&nbsp;Ongoing Chat
+							<div class="nav-right"><span class="count">{{ongoingChatsCount()}}</span></div>
+						</a>
 					</li>
 					<li ng-class="{active: location.url() == '/activeAdmins'}">
-						<a ng-href='#/activeAdmins'><i class="fa fa-star"></i>&nbsp;Active Admins</a>
+						<a ng-href='#/activeAdmins'><i class="fa fa-star"></i>&nbsp;Active Admins
+							<div class="nav-right"><span class="count">{{activeAdminsCount()}}</span></div>
+						</a>
 					</li>
 				</ul>
 			</div>
