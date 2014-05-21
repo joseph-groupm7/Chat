@@ -13,7 +13,8 @@ nodechat.controller("adminController",
 
 	$scope.init = function() {
 		socket.connect();
-		socket.emit("adminConnect", {username: $scope.username, sessionID: 4}, function(response) {
+		socket.emit("adminConnect", {username: $scope.username}, function(response) {
+			// Needs to be updated to the new response format
 			$scope.chatList.initializeMe($scope.username, response);
 		});
 

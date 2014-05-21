@@ -7,24 +7,19 @@ var app            = express(); // Instantiate the Express app
 var http           = require('http').createServer(app); // Set up an HTTP server for sockets to attach to
 var Spark          = require('primus.io'); // Include the Primus library...
 var primus         = new Spark(http, {parser: 'JSON', transformer: 'engine.io'}); // ...then use it to wrap Engine.IO
-var session        = require('cookie-session');
-var hash           = require('crypto');
+var session        = require('cookie-session'); // Tell Express it needs to use sessions
+var hash           = require('crypto'); // Include the Cryptographic library to help us generate unique session ID hashes
 
+// Set up Express to use sessions, and set the passphrases to verify cookie authenticity
 app.use(session({
 	keys: ["Keyboard Cat", "Correct Horse"]
 }));
 
 // Server Helper Objects
-var Client     = require("./objects/sparkClient.js");
 var Room       = require("./objects/room.js");
 var Chat       = require("./objects/chat.js");
 var Log        = require("./objects/logger.js");
 var Connection = require("./objects/connection.js");
-
-// Set up some useful properties on the Connection object that will greatly simplify working with connections
-primus.use("client", {
-	server: Client
-});
 
 // Server Routes
 var routes = require("./routes");
