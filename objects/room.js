@@ -11,11 +11,13 @@ Room.prototype.connectedClients = {}; // This is an object, NOT an array. This i
 Room.prototype.getID = function() {
 	return this.roomID;
 };
+
 Room.prototype.addClient = function(client) {
 	this.connectedClients[client.sessionID] = client;
 	client.getConnection().join(this.roomID);
 	return this;
 };
+
 Room.prototype.broadcast = function(connection, event, data, ignore) {
 	if (ignore === true) {
 		connection.room(this.roomID).except(connection.id).send(event, data);
@@ -24,6 +26,7 @@ Room.prototype.broadcast = function(connection, event, data, ignore) {
 		connection.room(this.roomID).send(event, data);
 	}
 };
+
 Room.prototype.getClient = function(id) {
 	var client;
 	if ((client = this.connectedClients[id]) !== undefined) {
@@ -33,16 +36,19 @@ Room.prototype.getClient = function(id) {
 		return -1;
 	}
 };
-Room.prototype.removeClient = function(client) {
-	delete this.connectedClients[client.id];
-	return this;
+
+Room.prototype.removeClient = function(clientID) {
+	var temp = this.connectedClients[clientID];
+	delete this.connectedClients[clientID];
+	return temp;
 };
-Room.prototype.getConnectedSockets = function() {
-	var socketList = [];
+
+Room.prototype.serialize = function() {
+	var serial = [];
 	_.forEach(this.connectedClients, function(client) {
-		socketList.push(client.id);
+		serial.push({username: client.username, sessionID: client.sessionID});
 	});
-	return socketList;
+	return serial;
 };
 
 module.exports = Room;

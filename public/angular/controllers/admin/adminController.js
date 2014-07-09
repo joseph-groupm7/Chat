@@ -18,12 +18,20 @@ nodechat.controller("adminController",
 			$scope.chatList.initializeMe($scope.username, response);
 		});
 
+		socket.emit("syncIdleUsers", {}, function(response) {
+			$scope.idleList.synchronize(response);
+		});
+
 		socket.bind("newAdminConnect", function(data) {
 			alert("Someone connected!");
 		});
 
 		socket.bind("newUserConnect", function(data) {
 			$scope.idleList.addUser(data.username, data.id);
+		});
+
+		socket.bind("messageFromRoom", function(data) {
+			$scope.chatList.pushMessage(null, new Message(data.from, data.body, data.timestamp));
 		});
 	};
 

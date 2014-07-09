@@ -8,7 +8,6 @@ var http           = require('http').createServer(app); // Set up an HTTP server
 var Spark          = require('primus.io'); // Include the Primus library...
 var primus         = new Spark(http, {parser: 'JSON', transformer: 'engine.io'}); // ...then use it to wrap Engine.IO
 var session        = require('cookie-session'); // Tell Express it needs to use sessions
-var hash           = require('crypto'); // Include the Cryptographic library to help us generate unique session ID hashes
 
 // Set up Express to use sessions, and set the passphrases to verify cookie authenticity
 app.use(session({
@@ -34,16 +33,7 @@ app.use(methodOverride());
 app.get("/client", routes.client.sendChatClient);
 app.get("/admin", routes.admin.sendChatClient);
 app.get("/debug", routes.debug.showStats);
-
-// Set up an API endpoint that gives a user a session ID
-app.get("/session", function(req, res) {
-	if (!req.session.sessionID) {
-		var sessionID = hash.createHash('md5');
-		sessionID.update("" + (new Date().getTime() + Math.floor(Math.random() * 500)));
-		req.session.sessionID = sessionID.digest('base64');
-	}
-	res.send(req.session);
-});
+app.get("/session", routes.session.getSessionKey);
 
 // Persistent server variables
 var debug              = new Log();
@@ -64,24 +54,31 @@ primus.on("connection", function(connection) {
 	debug.log("Connection ID " + connection.id + " has connected");
 
 	connection.on("userConnect", function(data, callback) {
-		debug.log("A user was added to the idle pool.");
-
-		/*
-		if (this user's sessionID exists in some pool of disconnected people...) {
-			reinitialize this user and update their
+		debug.log(data.sessionID);
+		var client;
+		// If the client connecting has a sessionID that's already in the connection list, reconnect them
+		if (connectionList[data.sessionID]) {
+			debug.log("A client has rejoined.");
+			client = connectionList[data.sessionID];
+			client.setConnection(connection);
 		}
 		else {
-		 */
-		var client = new Connection(data.username, true, connection, data.sessionID);
-		chat.getRoom("idleUsers")
-			.addClient(client);
-		chat.getRoom("admins")
-			.broadcast(connection, "newUserConnect", {username: client.username, id: client.sessionID}, true);
+			debug.log("A new client has connected.");
+			// Otherwise, create a new client and add them to the connection list
+			client = new Connection(data.username, false, connection, data.sessionID);
+			connectionList[client.sessionID] = client;
+			chat.getRoom("idleUsers")
+				.addClient(client);
+			// And then alert the admins
+			chat.getRoom("admins")
+				.broadcast(connection, "newUserConnect", {username: client.username, id: client.sessionID}, true);
+		}
 
-		callback(connection.id);
+		callback(data.sessionID);
 	});
 
 	connection.on("adminConnect", function(data, callback) {
+		debug.log(data.sessionID);
 		var admin;
 		// If the admin connecting has a sessionID that's already in the connection list, reconnect them
 		if (connectionList[data.sessionID]) {
@@ -97,14 +94,54 @@ primus.on("connection", function(connection) {
 			chat.getRoom("admins")
 				.addClient(admin)
 				.broadcast(connection, "newAdminConnect", {username: admin.username, id: admin.sessionID}, true);
+
+			console.log(admin);
+			admin.username = "Foo Bar";
+			console.log(admin);
+			console.log(connectionList);
 		}
 
-		callback(connection.id);
+		callback(data.sessionID);
+	});
+
+	connection.on("adminEstablishChat", function(data, callback) {
+		debug.log("An admin has established a chat with a user.");
+		chat.getRoom("idleUsers").removeClient(data.id);
+
+		var roomName = data.me + data.id;
+		var room = new Room(roomName, {});
+
+		room.addClient(connectionList[data.me])
+			.addClient(connectionList[data.id]);
+
+		chat.addRoom(room);
+		room.broadcast(connection, "adminChatEstablished", {username: connectionList[data.me].username, room: roomName}, true);
+		callback(true, roomName);
+	});
+
+	connection.on("syncIdleUsers", function(data, callback) {
+		// Verify that an admin is here?
+		callback(chat.getRoom("idleUsers").serialize());
+	});
+
+	connection.on("syncAdminChats", function(data, callback) {
+		// Verify that an admin is here?
 	});
 
 	connection.on("sendMessage", function(data, callback) {
-		debug.log("A message was received: " + data.body + " -> Message from connection ID " + connection.id);
+		debug.log("A message was received: " + data.body + " -> Message from connection ID " + data.sessionID);
 		debug.log("The message was sent to room ID " + data.roomID);
+
+		var from = connectionList[data.sessionID];
+		if (from.isAdmin) {
+			type = "admin";
+		}
+		else {
+			type = "client";
+		}
+
+		var message = {from: type, body: data.body, timestamp: 12345};
+		chat.getRoom(data.roomID).broadcast(connection, "messageFromRoom", message, false);
 		callback(true);
 	});
 });
@@ -118,5 +155,5 @@ app.use(express.static(__dirname + '/public'));
 // And if it isn't in /public, check in /bower_components
 app.use(express.static(__dirname + '/bower_components'));
 
-debug.log("The server has started. Running HTTP on port 7020 and Websocket on port 7040.");
+debug.log("The server has started. Running on port 7040.");
 http.listen(7040);

@@ -18,4 +18,8 @@ Connection.prototype.setConnection = function(spark) {
 	this.spark = spark;
 };
 
+Connection.prototype.getSessionID = function() {
+	return this.sessionID;
+};
+
 module.exports = Connection;

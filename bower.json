@@ -16,6 +16,7 @@
     "tests"
   ],
   "dependencies": {
-    "foundation": "~5.2.2"
+    "foundation": "~5.2.2",
+    "lodash": "~2.4.1"
   }
 }

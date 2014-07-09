@@ -1,13 +1,8 @@
 nodechat.service("ChatList", [function() {
 	var me;
 
-	var userList = [
-		new User("Joseph Walker", 23),
-		new User("Nathan Mickler", 42),
-		new User("Sum Guai", 63)
-	];
-
 	var chatList = [
+		/*
 		new Chat(
 			"1",
 			userList[0], [
@@ -31,6 +26,7 @@ nodechat.service("ChatList", [function() {
 				new Message("client", "This is just a test.", "01/01/2014"),
 				new Message("client", "Ole!", "01/01/2014"),
 			])
+		*/
 	];
 
 	var activeChat = chatList[1];
@@ -57,8 +53,8 @@ nodechat.service("ChatList", [function() {
 		activeChat = chat;
 	};
 
-	this.addChat = function(userList, messageList) {
-		chatList.push(new Chat(userList, messageList));
+	this.addChat = function(name, user) {
+		chatList.push(new Chat(name, user, []));
 	};
 
 	this.pushMessage = function(chat, message) {

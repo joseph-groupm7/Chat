@@ -9,7 +9,7 @@ nodechat.controller("chatController", ["$scope", "socketService", "ChatList", fu
 			if (response === true) {
 				var now = new Date();
 				var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
-				chatList.pushMessage(null, new Message("admin", $scope.response, time));
+				// chatList.pushMessage(null, new Message("admin", $scope.response, time));
 				$scope.response = "";
 			}
 		});
