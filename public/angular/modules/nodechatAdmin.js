@@ -8,10 +8,10 @@ nodechat.config(["$routeProvider", "$locationProvider", function($routeProvider,
 		controller: "idleController"
 	})
 	.when("/activeChats", {
-		templateUrl: "/angular/templates/ongoingChats.html"
+		templateUrl: "/public/angular/templates/ongoingChats.html"
 	})
 	.when("/activeAdmins", {
-		templateUrl: "/angular/templates/activeAdmins.html"
+		templateUrl: "/public/angular/templates/activeAdmins.html"
 	})
 	.otherwise({
 		redirectTo: "/activeChats"

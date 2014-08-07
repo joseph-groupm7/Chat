@@ -2,20 +2,20 @@
 <html>
 	<head>
 		<title>Client Chat Server</title>
-		<link rel="stylesheet" href="/css/client/client.css">
+		<link rel="stylesheet" href="/public/css/client/client.css">
 		<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		<script src="http://localhost:7040/primus/primus.io.js"></script>
+		<script src="/bower_components/socket.io-client/socket.io.js"></script>
 
 		<!-- Chat Client JS Files -->
-		<script src="/angular/modules/nodechatClient.js"></script>
-		<script src="/angular/services/modelHelpers.js"></script>
-		<script src="/angular/directives/draggable.js"></script>
-		<script src="/angular/controllers/client/clientController.js"></script>
-		<script src="/angular/services/socketService.js"></script>
-		<script src="/angular/services/client/clientChat.js"></script>
+		<script src="/public/angular/modules/nodechatClient.js"></script>
+		<script src="/public/angular/services/modelHelpers.js"></script>
+		<script src="/public/angular/directives/draggable.js"></script>
+		<script src="/public/angular/controllers/client/clientController.js"></script>
+		<script src="/public/angular/services/socketService.js"></script>
+		<script src="/public/angular/services/client/clientChat.js"></script>
 		<!-- Chat Client JS Files -->
 	</head>
 	<body>
@@ -39,10 +39,10 @@
 				</div>
 				<div id="chat-window-input">
 					<div class="row collapse chat-input">
-						<div class="large-1 columns">
+						<div class="small-1 columns">
 							<span class="prefix"><a href='#'><i class="fa fa-comment"></i></a></span>
 						</div>
-						<div class="large-11 columns">
+						<div class="small-11 columns">
 							<input type="text" class="chat-input" placeholder="Type your message here..." />
 						</div>
 					</div>

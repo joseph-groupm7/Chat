@@ -2,23 +2,9 @@
   "name": "Node-Chat",
   "main": "server.js",
   "dependencies": {
-    "express": "~4.0.0",
-    "body-parser": "~1.0.0",
-    "method-override": "~1.0.0",
-    "socket.io": "*",
+    "gulp": "^3.8.7",
+    "hapi": "^6.4.0",
     "lodash-node": "^2.4.1",
-    "require-directory": "^1.2.0",
-    "primus": "^2.2.1",
-    "engine.io": "^1.2.0",
-    "engine.io-client": "^1.2.0",
-    "primus.io": "^3.1.1",
-    "primus-rooms": "^3.0.4",
-    "primus-multiplex": "^3.0.2",
-    "primus-emitter": "^3.0.2",
-    "primus-express-session": "0.0.2",
-    "express-session": "^1.2.0",
-    "cookie-parser": "^1.1.0",
-    "connect": "^2.17.1",
-    "cookie-session": "^1.0.2"
+    "socket.io": "^1.0.6"
   }
 }

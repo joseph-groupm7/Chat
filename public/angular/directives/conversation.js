@@ -1,7 +1,7 @@
 nodechat.directive("conversation", [function() {
 	return {
 		restrict: "E",
-		templateUrl: "/angular/templates/conversation.html",
+		templateUrl: "/public/angular/templates/conversation.html",
 		replace: true,
 		scope: {
 			source: "=source"

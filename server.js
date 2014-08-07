@@ -1,39 +1,33 @@
-// server.js (Express 4.0)
-var _              = require('lodash-node'); // The Lo-Dash helper library
-var express        = require('express'); // Load the Express framework
-var bodyParser     = require('body-parser'); // Tell express that it needs to parse POST requests
-var methodOverride = require('method-override'); // Allow express to interpret "GET" requests as "PUT" and "DELETE"
-var app            = express(); // Instantiate the Express app
-var http           = require('http').createServer(app); // Set up an HTTP server for sockets to attach to
-var Spark          = require('primus.io'); // Include the Primus library...
-var primus         = new Spark(http, {parser: 'JSON', transformer: 'engine.io'}); // ...then use it to wrap Engine.IO
-var session        = require('cookie-session'); // Tell Express it needs to use sessions
+var Hapi = require('hapi');
+var routes = require('./routes');
+var socket = require('socket.io');
 
-// Set up Express to use sessions, and set the passphrases to verify cookie authenticity
-app.use(session({
-	keys: ["Keyboard Cat", "Correct Horse"]
-}));
+var server = new Hapi.Server(3000);
+
+routes.forEach(function(route){
+    server.route(route);
+});
+
+server.start(function () {
+    console.log('Server running at:', server.info.uri);
+});
+
+var io = socket.listen(server);
+
+io.on('connection', function(socket){
+    console.log('a user connected');
+    socket.on('disconnect', function(){
+        console.log('user disconnected');
+    });
+});
+
+/*
 
 // Server Helper Objects
 var Room       = require("./objects/room.js");
 var Chat       = require("./objects/chat.js");
 var Log        = require("./objects/logger.js");
 var Connection = require("./objects/connection.js");
-
-// Server Routes
-var routes = require("./routes");
-
-// App Configuration
-app.use(bodyParser());
-app.use(methodOverride());
-
-// Express Routes
-// The /client and /admin route sends the chat application for the user side
-// Debug shows stats for GroupM7
-app.get("/client", routes.client.sendChatClient);
-app.get("/admin", routes.admin.sendChatClient);
-app.get("/debug", routes.debug.showStats);
-app.get("/session", routes.session.getSessionKey);
 
 // Persistent server variables
 var debug              = new Log();
@@ -46,12 +40,8 @@ var chat               = new Chat({});
 // A simple collection of all the connected users
 var connectionList = {};
 
-/*
- * This is where the Socket code starts.
- */
-
-primus.on("connection", function(connection) {
-	debug.log("Connection ID " + connection.id + " has connected");
+io.on("connection", function(connection) {
+	console.log("Connection ID " + connection.id + " has connected");
 
 	connection.on("userConnect", function(data, callback) {
 		debug.log(data.sessionID);
@@ -121,6 +111,7 @@ primus.on("connection", function(connection) {
 
 	connection.on("syncIdleUsers", function(data, callback) {
 		// Verify that an admin is here?
+        debug.log(chat.getRoom("idleUsers").serialize());
 		callback(chat.getRoom("idleUsers").serialize());
 	});
 
@@ -146,14 +137,9 @@ primus.on("connection", function(connection) {
 	});
 });
 
-/*
- * This is where the Socket code stops.
  */
-
 // Tell express to use the /public directory as the default for static files
-app.use(express.static(__dirname + '/public'));
+//app.use(express.static(__dirname + '/public'));
 // And if it isn't in /public, check in /bower_components
-app.use(express.static(__dirname + '/bower_components'));
+//app.use(express.static(__dirname + '/bower_components'));
 
-debug.log("The server has started. Running on port 7040.");
-http.listen(7040);

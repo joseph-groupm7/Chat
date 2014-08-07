@@ -1,6 +1,6 @@
 nodechat.service("socketService", ["$rootScope", "$http", "$q", function($rootScope, $http, $q) {
 	var open = false;
-	var primus;
+	var socket;
 	var sessionID = false;
 
 	this.connect = function() {
@@ -8,14 +8,14 @@ nodechat.service("socketService", ["$rootScope", "$http", "$q", function($rootSc
 		// then open up the Primus connection
 		if (!open) {
 			open = true;
-			primus = new Primus("http://localhost:7040", {});
+            socket = new io("http://localhost:3000");
 		}
 		else {
 			return false;
 		}
 	};
 	this.bind = function(event, callback) {
-		primus.on(event, function() {
+		socket.on(event, function() {
 			var args = arguments;
 			callback.apply(primus, args);
 			$rootScope.$apply();
