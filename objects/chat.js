@@ -1,4 +1,5 @@
-// A collection of rooms
+module.exports = Chat;
+
 function Chat(list) {
 	this.rooms = list;
 }
@@ -10,5 +11,3 @@ Chat.prototype.addRoom = function(room) {
 Chat.prototype.getRoom = function(id) {
 	return this.rooms[id];
 };
-
-module.exports = Chat;

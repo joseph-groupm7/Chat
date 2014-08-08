@@ -1,3 +1,5 @@
+module.exports = Room;
+
 var _ = require('lodash-node');
 
 // The Client collection wrapper
@@ -50,5 +52,3 @@ Room.prototype.serialize = function() {
 	});
 	return serial;
 };
-
-module.exports = Room;

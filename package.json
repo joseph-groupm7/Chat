@@ -2,9 +2,14 @@
   "name": "Node-Chat",
   "main": "server.js",
   "dependencies": {
-    "gulp": "^3.8.7",
     "hapi": "^6.4.0",
+    "hapi-auth-cookie": "^1.3.2",
     "lodash-node": "^2.4.1",
-    "socket.io": "^1.0.6"
+    "socket.io": "^1.0.6",
+    "yar": "^2.4.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.7",
+    "gulp-nodemon": "^1.0.4"
   }
 }

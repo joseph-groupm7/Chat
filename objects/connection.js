@@ -1,3 +1,5 @@
+module.exports = Connection;
+
 function Connection(username, isAdmin, spark, sessionID) {
 	this.username  = username;
 	this.isAdmin   = isAdmin;
@@ -21,5 +23,3 @@ Connection.prototype.setConnection = function(spark) {
 Connection.prototype.getSessionID = function() {
 	return this.sessionID;
 };
-
-module.exports = Connection;
