@@ -1,26 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="client">
 	<head>
 		<title>Client Chat Server</title>
 		<link rel="stylesheet" href="/public/css/client/client.css">
 		<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		<script src="/bower_components/socket.io-client/socket.io.js"></script>
+        <script src="https://cdn.socket.io/socket.io-1.0.6.js"></script>
+		<script src="/public/angular/main.js"></script>
 
-		<!-- Chat Client JS Files -->
-		<script src="/public/angular/modules/nodechatClient.js"></script>
-		<script src="/public/angular/services/modelHelpers.js"></script>
-		<script src="/public/angular/directives/draggable.js"></script>
-		<script src="/public/angular/controllers/client/clientController.js"></script>
-		<script src="/public/angular/services/socketService.js"></script>
-		<script src="/public/angular/services/client/clientChat.js"></script>
-		<!-- Chat Client JS Files -->
 	</head>
 	<body>
 		<!-- Chat Client HTML -->
-		<div id="client-chat" ng-app="nodechat" ng-controller="clientController">
+		<div id="client-chat" ng-controller="ClientController">
+
+            <button ng-click="testMessage()">Test Message</button>
+
 			<div id="login-screen" ng-if="!isConnected()">
 				<input type="text" ng-model="clientInformation.username" />
 				<button ng-click="setUsername()">Connect</button>
