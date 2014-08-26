@@ -14,6 +14,14 @@ angular.module('socket', []).factory('socket', function($rootScope) {
         },
         getID: function(){
             return socket.io.engine.id;
+        },
+        setRoom: function(room_name){
+            this.room = room_name;
+        },
+        sendMessage: function(message){
+            if(this.hasOwnProperty('room')){
+                socket.emit('message', {room: this.room, content: message});
+            }
         }
     };
 });

@@ -3,6 +3,7 @@ module.exports = lobby;
 
 var socket = require('socket.io');
 var Client = require('./Client');
+var Chat = require('./Chat');
 var _ = require('lodash-node');
 
 function lobby(io){
@@ -32,27 +33,40 @@ function lobby(io){
         });
 
         socket.on('lobby.activateChat', function(users){
-            var Room = [];
-            Room = Room.concat(_.remove(that.idle_users, function(client){
+
+            var room_name = users.user_id.toString()+users.admin_id.toString();
+            var clients = [];
+
+            clients = clients.concat(_.remove(that.idle_users, function(client){
                 return client.id == users.user_id;
             }));
-            Room = Room.concat(_.remove(that.active_admins, function(client){
+            clients = clients.concat(_.remove(that.active_admins, function(client){
                 return client.id == users.admin_id;
             }));
 
-            var nsp_name = '/'+users.user_id.toString()+users.admin_id.toString();
-            var nsp = io.of(nsp_name);
-            console.log('new namespace: ' + nsp_name);
-            console.log(Room);
+            //changes in lobby
+            that.ongoing_chats.push(new Chat(clients, room_name));
 
-            Room.map(function(client){
-                io.to(client.id).emit('lobby.activateChat', nsp_name);
-                console.log(nsp_name, client.id);
+            //notify clients of the room name
+            clients.map(function(client){
+
+                //join each client to the room
+                io.of('/').connected[client.id].join(room_name);
+
+                //notify each client of the room name
+                io.to(client.id).emit('lobby.activateChat', room_name);
+
             });
 
             that.updateClient();
 
-        })
+        });
+
+        socket.on('message', function(message){
+            //emit to clients in the room
+            io.to(message.room).emit('message', message.content);
+            //TODO: persist somewhere
+        });
 
     });
 

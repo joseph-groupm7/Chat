@@ -22,16 +22,27 @@ angular.module('admin').config(function($stateProvider, $urlRouterProvider) {
 
 angular.module('admin').controller('AdminController', function($scope, socket){
 
+    $scope.text = '';
+
     socket.on('lobby', function(lobby){
-        console.log(lobby);
         $scope.lobby = lobby;
+    });
+
+    socket.on('lobby.activateChat', function(room_name){
+        socket.setRoom(room_name);
+    });
+
+    socket.on('message', function(message){
+        $scope.text += message;
     });
 
     $scope.activateChat = function(user_id){
         socket.emit('lobby.activateChat', {user_id: user_id,admin_id: socket.getID()});
     };
 
-    socket.on('lobby.activateChat', function(namespace){
-        console.log(namespace);
-    })
+    $scope.sendMessage = function(message){
+        socket.sendMessage(message);
+    };
+
+
 });

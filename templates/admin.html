@@ -67,6 +67,7 @@
 				<!-- Chat Window -->
 				<div class="chat-content">
 					<div id="chat-overflow">
+                        {{text}}
 						<conversation source="chatList.getActiveChat()"></conversation>
 					</div>
 					<div id="message-window" class="row collapse">
@@ -74,7 +75,7 @@
 							<input type="text" placeholder="Type in your message..." ng-model="response" />
 						</div>
 						<div class="small-1 columns">
-							<a class="button postfix" ng-click="sendMessage()">
+							<a class="button postfix" ng-click="sendMessage(response)">
 								<i class="fa fa-reply"></i>
 							</a>
 						</div>
