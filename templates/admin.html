@@ -9,10 +9,6 @@
 		<link rel="stylesheet" href="/public/css/admin/animations.css">
 		<!-- Layout files -->
 
-        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
-        <script src="https://cdn.socket.io/socket.io-1.0.6.js"></script>
-        <script src="/public/angular/main.js"></script>
-
 	</head>
 	<body ng-controller="AdminController">
 
@@ -42,17 +38,17 @@
 				<ul id="side-nav-menu">
 					<li ng-class="{active: location.url() == '/idleUsers'}">
 						<a ng-href='#/idleUsers'><i class="fa fa-users"></i>&nbsp;Idle Users
-							<div class="nav-right"><span class="count">{{idleUsersCount()}}</span></div>
+							<div class="nav-right"><span class="count">{{lobby.idle_users.length}}</span></div>
 						</a>
 					</li>
 					<li ng-class="{active: location.url() == '/activeChats'}">
 						<a ng-href='#/activeChats'><i class="fa fa-comments"></i>&nbsp;Ongoing Chat
-							<div class="nav-right"><span class="count">{{ongoingChatsCount()}}</span></div>
+							<div class="nav-right"><span class="count">{{lobby.ongoing_chats.length}}</span></div>
 						</a>
 					</li>
 					<li ng-class="{active: location.url() == '/activeAdmins'}">
 						<a ng-href='#/activeAdmins'><i class="fa fa-star"></i>&nbsp;Active Admins
-							<div class="nav-right"><span class="count">{{activeAdminsCount()}}</span></div>
+							<div class="nav-right"><span class="count">{{lobby.active_admins.length}}</span></div>
 						</a>
 					</li>
 				</ul>
@@ -64,7 +60,7 @@
 
 				<!-- List View -->
 				<div class="chats-list">
-					<ng-view></ng-view>
+					<ui-view></ui-view>
 				</div>
 				<!-- List View -->
 
@@ -92,7 +88,11 @@
 		</div>
 		<!-- Body -->
 
-		<!-- Chat Client HTML -->
+        <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular.min.js"></script>
+        <script src="/bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+        <script src="https://cdn.socket.io/socket.io-1.0.6.js"></script>
+        <script src="/public/angular/services/socket.js"></script>
+        <script src="/public/angular/admin/main.js"></script>
 
 	</body>
 </html>

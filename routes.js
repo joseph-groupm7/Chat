@@ -4,6 +4,6 @@ module.exports = [
     {path: "/bower_components/{path*}", method: "GET", handler: {directory: {path: "./bower_components", listing: false, index: false}}},
 
     //application routing
-    {method: 'GET', path: '/client', handler: function(request, reply){reply.file('./templates/client.html');}},
+    {method: 'GET', path: '/user', handler: function(request, reply){reply.file('./templates/user.html');}},
     {method: 'GET', path: '/admin', handler: function(request, reply){reply.file('./templates/admin.html');}}
 ];
