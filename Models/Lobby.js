@@ -14,20 +14,34 @@ function lobby(io){
 
         //add client and admin to respective idles on connect
         if(_.contains(socket.handshake.headers.referer, 'user')){
-            that.idle_users.push(new Client(socket.id, 'test-user'));
+            that.idle_users.push(new Client(socket.id, 'test-user', 'user'));
             that.updateClient();
         }else if(_.contains(socket.handshake.headers.referer, 'admin')){
-            that.active_admins.push(new Client(socket.id, 'test-admin'));
+            that.active_admins.push(new Client(socket.id, 'test-admin', 'admin'));
             that.updateClient();
         }
 
         //remove from lobby on disconnect
         socket.on('disconnect', function(){
+            //remove from idle
             _.remove(that.idle_users, function(client){
                 return client.id == socket.id;
             });
+            //remove from admins
             _.remove(that.active_admins, function(client){
                 return client.id == socket.id;
+            });
+            //remove ongoing chat TODO: possibly associate with token for recovery?
+            _.remove(that.ongoing_chats, function(chat){
+                var exists = false;
+                chat.clients.map(function(client){
+                    if(client.id == socket.id){
+                        exists = true;
+                    }
+                });
+                //TODO: send notification to clients that connection stopped
+                io.to(chat.room).emit('chat.Disconnected');
+                return exists;
             });
             that.updateClient();
         });
@@ -63,8 +77,8 @@ function lobby(io){
         });
 
         socket.on('message', function(message){
-            //emit to clients in the room
-            io.to(message.room).emit('message', message.content);
+            //sends message to all clients
+            io.to(message.room).emit('message', message);
             //TODO: persist somewhere
         });
 

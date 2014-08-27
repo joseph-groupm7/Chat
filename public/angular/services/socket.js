@@ -1,5 +1,12 @@
 angular.module('socket', []).factory('socket', function($rootScope) {
     var socket = io();
+
+    function Message(message, type, room){
+        this.content = message;
+        this.type = type;
+        this.room = room;
+    }
+
     return {
         on: function(eventName, callback) {
             socket.on(eventName, function() {
@@ -18,9 +25,10 @@ angular.module('socket', []).factory('socket', function($rootScope) {
         setRoom: function(room_name){
             this.room = room_name;
         },
-        sendMessage: function(message){
+        sendMessage: function(message, type){
             if(this.hasOwnProperty('room')){
-                socket.emit('message', {room: this.room, content: message});
+                var msg = new Message(message, type, this.room);
+                socket.emit('message', msg);
             }
         }
     };

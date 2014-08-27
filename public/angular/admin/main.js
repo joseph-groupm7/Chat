@@ -24,6 +24,11 @@ angular.module('admin').controller('AdminController', function($scope, socket){
 
     $scope.text = '';
 
+    $scope.chat = {
+        connected: false,
+        messages: []
+    };
+
     socket.on('lobby', function(lobby){
         $scope.lobby = lobby;
     });
@@ -33,7 +38,7 @@ angular.module('admin').controller('AdminController', function($scope, socket){
     });
 
     socket.on('message', function(message){
-        $scope.text += message;
+        $scope.chat.messages.push(message);
     });
 
     $scope.activateChat = function(user_id){
@@ -41,7 +46,7 @@ angular.module('admin').controller('AdminController', function($scope, socket){
     };
 
     $scope.sendMessage = function(message){
-        socket.sendMessage(message);
+        socket.sendMessage(message, 'admin');
     };
 
 

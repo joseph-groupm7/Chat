@@ -5,8 +5,7 @@
 		<!-- Layout files -->
 		<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 		<link rel="stylesheet" href="/bower_components/foundation/css/normalize.css">
-		<link rel="stylesheet" href="/public/css/admin/admin.css">
-		<link rel="stylesheet" href="/public/css/admin/animations.css">
+		<link rel="stylesheet" href="/public/css/admin/dist/style.css">
 		<!-- Layout files -->
 
 	</head>
@@ -65,17 +64,20 @@
 				<!-- List View -->
 
 				<!-- Chat Window -->
-				<div class="chat-content">
+				<div class="chat-content messages">
 					<div id="chat-overflow">
-                        {{text}}
-						<conversation source="chatList.getActiveChat()"></conversation>
+                        <ul>
+                            <li ng-repeat="message in chat.messages track by $index" ng-class="{userMessage: message.type == 'user', adminMessage: message.type == 'admin' }">
+                                {{message.content}}
+                            </li>
+                        </ul>
 					</div>
 					<div id="message-window" class="row collapse">
 						<div class="small-11 columns">
-							<input type="text" placeholder="Type in your message..." ng-model="response" />
+							<input type="text" placeholder="Type in your message..." ng-model="chat.message" />
 						</div>
 						<div class="small-1 columns">
-							<a class="button postfix" ng-click="sendMessage(response)">
+							<a class="button postfix" ng-click="sendMessage(chat.message)">
 								<i class="fa fa-reply"></i>
 							</a>
 						</div>
