@@ -6,6 +6,16 @@ var Lobby = require('./Models/Lobby');
 
 var server = new hapi.Server(3000);
 
+server.pack.register({
+    plugin: require('yar'),
+    options: {
+        cookieOptions: {
+            isSecure: false,
+            password: 'seems secure'
+        }
+    }
+}, function(err){console.log(err)});
+
 //load routes
 routes.forEach(function(route){
     server.route(route);

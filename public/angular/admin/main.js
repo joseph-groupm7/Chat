@@ -1,6 +1,4 @@
-angular.module('admin', ['socket', 'ui.router']);
-
-angular.module('admin').config(function($stateProvider, $urlRouterProvider) {
+angular.module('admin', ['socket', 'ui.router', 'ngCookies']).config(function($stateProvider, $urlRouterProvider) {
 
     $urlRouterProvider.otherwise("/ongoingChats");
 
@@ -20,33 +18,47 @@ angular.module('admin').config(function($stateProvider, $urlRouterProvider) {
 
 });
 
-angular.module('admin').controller('AdminController', function($scope, socket){
+angular.module('admin').controller('AdminController', function($scope, socket, $location, $rootScope, $cookies){
 
-    $scope.text = '';
-
-    $scope.chat = {
-        connected: false,
-        messages: []
+    $rootScope.location = $location;
+    $scope.local = {
+        chats: []
     };
 
     socket.on('lobby', function(lobby){
         $scope.lobby = lobby;
-    });
 
-    socket.on('lobby.activateChat', function(room_name){
-        socket.setRoom(room_name);
+        var chats_belonged_to = [];
+
+        //add chats that the admin is participating in to client side chat list
+        $scope.chats = _.find(lobby.ongoing_chats, function(chat){
+
+            chat.clients.map(function(client){
+                if(client.session_id == $cookies.session){
+                    chats_belonged_to.push(chat);
+                }
+            });
+        });
+
+        $scope.local.chats = chats_belonged_to;
     });
 
     socket.on('message', function(message){
         $scope.chat.messages.push(message);
     });
 
-    $scope.activateChat = function(user_id){
-        socket.emit('lobby.activateChat', {user_id: user_id,admin_id: socket.getID()});
+    $scope.activateChat = function(user){
+        socket.emit('lobby.activateChat', {user: user, admin: _.find($scope.lobby.active_admins, function(admin){
+            return admin.session_id == $cookies.session;
+        })});
     };
 
     $scope.sendMessage = function(message){
         socket.sendMessage(message, 'admin');
+    };
+
+    $scope.setActiveChat = function(chat){
+        _.find()
     };
 
 

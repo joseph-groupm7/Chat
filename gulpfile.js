@@ -1,7 +1,6 @@
 var gulp = require('gulp');
 var nodemon = require('gulp-nodemon');
 var sass = require('gulp-sass');
-var sassGraph = require('gulp-sass-graph');
 var livereload = require('gulp-livereload');
 var notify = require('gulp-notify');
 

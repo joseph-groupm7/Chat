@@ -36,17 +36,17 @@
 			<div id="side-nav">
 				<ul id="side-nav-menu">
 					<li ng-class="{active: location.url() == '/idleUsers'}">
-						<a ng-href='#/idleUsers'><i class="fa fa-users"></i>&nbsp;Idle Users
+						<a ui-sref='idleUsers'><i class="fa fa-users"></i>&nbsp;Idle Users
 							<div class="nav-right"><span class="count">{{lobby.idle_users.length}}</span></div>
 						</a>
 					</li>
-					<li ng-class="{active: location.url() == '/activeChats'}">
-						<a ng-href='#/activeChats'><i class="fa fa-comments"></i>&nbsp;Ongoing Chat
-							<div class="nav-right"><span class="count">{{lobby.ongoing_chats.length}}</span></div>
+					<li ng-class="{active: location.url() == '/ongoingChats'}">
+						<a ui-sref='ongoingChats'><i class="fa fa-comments"></i>&nbsp;Ongoing Chat
+							<div class="nav-right"><span class="count">{{local.chats.length}}</span></div>
 						</a>
 					</li>
 					<li ng-class="{active: location.url() == '/activeAdmins'}">
-						<a ng-href='#/activeAdmins'><i class="fa fa-star"></i>&nbsp;Active Admins
+						<a ui-sref='activeAdmins'><i class="fa fa-star"></i>&nbsp;Active Admins
 							<div class="nav-right"><span class="count">{{lobby.active_admins.length}}</span></div>
 						</a>
 					</li>
@@ -91,7 +91,9 @@
 		</div>
 		<!-- Body -->
 
+        <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular-cookies.min.js"></script>
         <script src="/bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
         <script src="https://cdn.socket.io/socket.io-1.0.6.js"></script>
         <script src="/public/angular/services/socket.js"></script>

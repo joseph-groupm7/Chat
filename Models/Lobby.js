@@ -5,72 +5,61 @@ var socket = require('socket.io');
 var Client = require('./Client');
 var Chat = require('./Chat');
 var _ = require('lodash-node');
+var chatUtils = require('../chatUtils');
 
 function lobby(io){
 
     var that = this;
 
+    io.use(function(socket, next){
+        if(socket.handshake.query.session_id != undefined){
+            next();
+        }
+    });
+
     io.on('connection', function(socket){
 
-        //add client and admin to respective idles on connect
-        if(_.contains(socket.handshake.headers.referer, 'user')){
-            that.idle_users.push(new Client(socket.id, 'test-user', 'user'));
-            that.updateClient();
-        }else if(_.contains(socket.handshake.headers.referer, 'admin')){
-            that.active_admins.push(new Client(socket.id, 'test-admin', 'admin'));
-            that.updateClient();
+        //TODO: if session_id in a room..
+        if(chatUtils.alreadyChatting(socket, that.ongoing_chats)){
+            //put them back in the room
+        }else{
+            //add client or admin to respective idle array on connection
+            that.addUserToLobby(socket);
         }
 
-        //remove from lobby on disconnect
         socket.on('disconnect', function(){
-            //remove from idle
-            _.remove(that.idle_users, function(client){
-                return client.id == socket.id;
-            });
-            //remove from admins
-            _.remove(that.active_admins, function(client){
-                return client.id == socket.id;
-            });
-            //remove ongoing chat TODO: possibly associate with token for recovery?
-            _.remove(that.ongoing_chats, function(chat){
-                var exists = false;
-                chat.clients.map(function(client){
-                    if(client.id == socket.id){
-                        exists = true;
-                    }
-                });
-                //TODO: send notification to clients that connection stopped
-                io.to(chat.room).emit('chat.Disconnected');
-                return exists;
-            });
-            that.updateClient();
+            //TODO: disable room messages if count < 1
         });
 
-        socket.on('lobby.activateChat', function(users){
+        socket.on('lobby.activateChat', function(pair){
 
-            var room_name = users.user_id.toString()+users.admin_id.toString();
+            var room_name = pair.user.session_id+pair.admin.session_id;
             var clients = [];
 
+            //remove from idle users when activated
             clients = clients.concat(_.remove(that.idle_users, function(client){
-                return client.id == users.user_id;
-            }));
-            clients = clients.concat(_.remove(that.active_admins, function(client){
-                return client.id == users.admin_id;
+                return client.session_id == pair.user.session_id;
             }));
 
-            //changes in lobby
-            that.ongoing_chats.push(new Chat(clients, room_name));
+            if(clients.length > 0){
+                //push the chat into the ongoing array
+                that.ongoing_chats.push(new Chat(clients, room_name));
 
-            //notify clients of the room name
-            clients.map(function(client){
+                clients.map(function(client){
 
-                //join each client to the room
-                io.of('/').connected[client.id].join(room_name);
+                    var socket = io.of('/').connected[client.id];
+                    if(socket){
+                        //join each client to the room
+                        io.of('/').connected[client.id].join(room_name);
 
-                //notify each client of the room name
-                io.to(client.id).emit('lobby.activateChat', room_name);
+                        //notify each client of the room name
+                        io.to(client.id).emit('lobby.activateChat', room_name);
+                    }else{
+                        console.log(client.id);
+                    }
 
-            });
+                });
+            }
 
             that.updateClient();
 
@@ -86,6 +75,38 @@ function lobby(io){
 
     this.updateClient = function(){
         io.sockets.emit('lobby', this);
+    };
+
+    this.addUserToLobby = function(socket){
+
+        if(_.contains(socket.handshake.headers.referer, 'user')){
+
+            var userExists = false;
+            that.idle_users.map(function(client){
+                if(socket.handshake.query.session_id == client.session_id){
+                    userExists = true;
+                }
+            });
+
+            if(!userExists){
+                that.idle_users.push(new Client(socket.id, 'test-user', 'user', socket.handshake.query.session_id));
+            }
+
+        }else if(_.contains(socket.handshake.headers.referer, 'admin')){
+            var adminExists = false;
+            that.active_admins.map(function(client){
+                if(socket.handshake.query.session_id == client.session_id){
+                    adminExists = true;
+                }
+            });
+
+            if(!adminExists){
+                that.active_admins.push(new Client(socket.id, 'test-admin', 'admin', socket.handshake.query.session_id));
+            }
+        }
+
+        that.updateClient();
+
     };
 
     this.idle_users = [];

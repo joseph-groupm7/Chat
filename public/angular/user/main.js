@@ -1,4 +1,6 @@
-angular.module('client', ['socket']).controller('ClientController', function($scope, socket){
+angular.module('client', ['socket']);
+
+angular.module('client').controller('ClientController', function($scope, socket){
 
     $scope.chat = {
         connected: false,
@@ -9,18 +11,13 @@ angular.module('client', ['socket']).controller('ClientController', function($sc
         socket.sendMessage(message, 'user');
     };
 
-    socket.on('lobby.activateChat', function(room_name){
-        $scope.chat.connected = true;
-        socket.setRoom(room_name);
-        console.log('joined room ', room_name);
-    });
-
     socket.on('message', function(message){
         $scope.chat.messages.push(message);
     });
 
     socket.on('chat.Disconnected', function(){
-        $scope.connected = false;
+        //$scope.chat.connected = false;
     });
+
 });
 

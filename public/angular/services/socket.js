@@ -1,10 +1,11 @@
-angular.module('socket', []).factory('socket', function($rootScope) {
-    var socket = io();
+angular.module('socket', ['ngCookies']).factory('socket', function($rootScope, $cookies) {
+    var socket = io({ query: 'session_id=' + $cookies.session });
 
-    function Message(message, type, room){
+    function Message(message, type, room, session_id){
         this.content = message;
         this.type = type;
         this.room = room;
+        this.session_id = session_id;
     }
 
     return {
@@ -22,14 +23,9 @@ angular.module('socket', []).factory('socket', function($rootScope) {
         getID: function(){
             return socket.io.engine.id;
         },
-        setRoom: function(room_name){
-            this.room = room_name;
-        },
-        sendMessage: function(message, type){
-            if(this.hasOwnProperty('room')){
-                var msg = new Message(message, type, this.room);
+        sendMessage: function(message, type, room){
+                var msg = new Message(message, type, room, $cookies.session);
                 socket.emit('message', msg);
-            }
         }
     };
 });
