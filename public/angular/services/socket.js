@@ -1,5 +1,6 @@
 angular.module('socket', ['ngCookies']).factory('socket', function($rootScope, $cookies) {
-    var socket = io({ query: 'session_id=' + $cookies.session });
+
+    var socket = io({ query: 'session_id=' + $cookies.session + '&username=' +  $cookies.username});
 
     function Message(message, type, room, session_id){
         this.content = message;

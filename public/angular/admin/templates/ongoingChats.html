@@ -2,20 +2,26 @@
     <thead>
         <tr>
             <th>Customer</th>
-            <th class="text-right">Last Activity</th>
+            <th class="text-right">Admin</th>
         </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="chat in local.chats" ng-class="{active: chatList.getActiveChat() == chat}" ng-click="chatList.setActiveChat(chat)">
+
+    <tr ng-repeat="chat in lobby.ongoing_chats" ng-class="{active: activeChat == chat}" ng-click="setActiveChat(chat)">
         <td>
-            <p ng-repeat="client in chat.clients | filter:{type: 'user'} ">
-                {{client.name}}
+            <p ng-repeat="client in chat.clients | filter:{type : 'user'} ">
+                {{client.username}}
             </p>
         </td>
-        <td align="right">{{chat.last_activity}}</td>
+        <td>
+            <p class="text-right" ng-repeat="client in chat.clients | filter:{type : 'admin'} ">
+                {{client.username}}
+            </p>
+        </td>
     </tr>
     <tr ng-if="lobby.ongoing_chats.length == 0">
         <td colspan="2">No Active Chats</td>
     </tr>
     </tbody>
 </table>
+

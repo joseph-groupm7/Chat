@@ -7,7 +7,7 @@
     </thead>
     <tbody>
     <tr ng-repeat="user in lobby.idle_users" ng-click="activateChat(user)">
-        <td>{{user.name}}</td>
+        <td>{{user.username}}</td>
         <td align="right">4 minutes</td>
     </tr>
     <tr ng-show="!idleList.getIdleUsers().length">

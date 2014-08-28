@@ -27,7 +27,6 @@ server.start(function () {
 });
 
 var io = socket.listen(server.listener);
-
 var lobby = new Lobby(io);
 
 

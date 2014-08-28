@@ -1,14 +1,11 @@
-angular.module('client', ['socket']);
+angular.module('client', ['socket', 'ngCookies']);
 
-angular.module('client').controller('ClientController', function($scope, socket){
+angular.module('client').controller('ClientController', function($scope, socket, $cookies){
 
-    $scope.chat = {
-        connected: false,
-        messages: []
-    };
+    $cookies.username = 'user-username';
 
     $scope.sendMessage = function(message){
-        socket.sendMessage(message, 'user');
+        socket.sendMessage(message);
     };
 
     socket.on('message', function(message){
