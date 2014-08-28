@@ -44,7 +44,7 @@ function lobby(io){
                 client.socket.join(chat.room);
             });
 
-            //socket.emit('lobby.activateChat', chat.room);
+            socket.emit('lobby.activateChat', chat);
 
             that.updateClient();
 

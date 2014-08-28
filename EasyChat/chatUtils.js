@@ -83,5 +83,9 @@ module.exports = {
             }
         }
 
+    },
+
+    removeSockets : function(object){
+        //TODO: return object without socket properties...too heavy for client..
     }
 };
