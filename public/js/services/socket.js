@@ -2,9 +2,9 @@ angular.module('socket', ['ngCookies']).factory('socket', function($rootScope, $
 
     var socket = io({ query: 'session_id=' + $cookies.session + '&username=' +  $cookies.username});
 
-    function Message(message, type, room, session_id){
+    function Message(message, room, session_id){
         this.content = message;
-        this.type = type;
+        this.type = 'admin';
         this.room = room;
         this.session_id = session_id;
     }
@@ -24,9 +24,9 @@ angular.module('socket', ['ngCookies']).factory('socket', function($rootScope, $
         getID: function(){
             return socket.io.engine.id;
         },
-        sendMessage: function(message, type, room){
-                var msg = new Message(message, type, room, $cookies.session);
-                socket.emit('message', msg);
+        sendMessage: function(message, chat){
+            var msg = new Message(message, chat.room, $cookies.session);
+            socket.emit('message', msg);
         }
     };
 });

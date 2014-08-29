@@ -1,4 +1,4 @@
-angular.module('admin').directive('chat', function(socket){
+angular.module('user').directive('chat', function(socket){
 
     var link = function(scope){
 
@@ -18,11 +18,8 @@ angular.module('admin').directive('chat', function(socket){
 
     return {
         link: link,
-        scope: {
-            chat: '=chat'
-        },
         restrict: 'E',
-        templateUrl: 'public/js/admin/working/directives/chat/chat.html'
+        templateUrl: 'public/js/user/working/directives/chat/chat.html'
     };
 
 });

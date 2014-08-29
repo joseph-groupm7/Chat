@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="client">
+<html ng-app="user">
 	<head>
 		<title>Client Chat Server</title>
 		<link rel="stylesheet" href="/public/css/user/dist/style.css">
@@ -7,37 +7,10 @@
 	</head>
 	<body>
 		<!-- Chat Client HTML -->
-		<div id="client-chat" ng-controller="ClientController">
+		<div id="client-chat" ng-controller="UserController">
 
-            <button ng-click="testMessage()">Test Message</button>
+            <chat></chat>
 
-			<div id="login-screen" ng-if="!isConnected()">
-				<input type="text" ng-model="clientInformation.username" />
-				<button ng-click="setUsername()">Connect</button>
-			</div>
-			<div id="chat-window" ng-if="chat.connected" draggable="chat-window-topbar">
-				<div id="chat-window-topbar">
-					<h2 class="left">LiveChat Operator</h2>
-					<a href='#' class="right"><i class="fa fa-times"></i></a>
-				</div>
-				<div id="chat-window-chat">
-					<ul class="chat-list">
-						<li ng-repeat="message in chat.messages track by $index" ng-class="{userMessage: message.type == 'user', adminMessage: message.type == 'admin' }">
-							{{message.content}}
-						</li>
-					</ul>
-				</div>
-				<div id="chat-window-input">
-					<div class="row collapse chat-input">
-						<div class="small-1 columns">
-							<span ng-click="sendMessage(chat.message)" class="prefix"><a href='#'><i class="fa fa-comment"></i></a></span>
-						</div>
-						<div class="small-11 columns">
-							<input ng-model="chat.message" type="text" class="chat-input" placeholder="Type your message here..." />
-						</div>
-					</div>
-				</div>
-			</div>
 		</div>
 
         <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>

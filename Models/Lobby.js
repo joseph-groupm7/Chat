@@ -43,8 +43,10 @@ function lobby(io){
 
             var chat = chatUtils.createChat(allClients, state);
 
+
+
             //notify admin of chat on client side
-            //io.to(chat.room).emit('lobby.activateChat', chat.lighten());
+            io.to(chat.room).emit('lobby.activateChat');
             client.socket.emit('lobby.activateChat', chat.lighten());
 
             that.updateClient();
@@ -53,7 +55,7 @@ function lobby(io){
 
         socket.on('message', function(message){
             //sends message to all clients
-            io.to(message.chat.room).emit('message', message);
+            io.to(message.room).emit('message', message);
             //TODO: persist somewhere
         });
 
