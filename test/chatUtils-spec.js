@@ -12,7 +12,7 @@ var Chat = require('../Models/Chat');
 var Client = require('../Models/Client');
 var state = require('../EasyChat/state');
 
-lab.experiment('math', function () {
+lab.experiment('chatUtils', function () {
 
     lab.beforeEach(function (done) {
         done();
@@ -104,6 +104,10 @@ lab.experiment('math', function () {
 
             state.idle_users.push(user_client);
             state.active_admins.push(admin_client);
+
+            expect(state.idle_users.length).to.equal(1);
+            expect(state.ongoing_chats.length).to.equal(0);
+            expect(state.active_admins.length).to.equal(1);
 
             var chat = chatUtils.createChat([user_client, admin_client], state);
 

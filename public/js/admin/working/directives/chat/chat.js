@@ -13,16 +13,16 @@ angular.module('admin').directive('chat', function(socket){
         };
 
         socket.on('message', function(message){
-
             scope.messages.push(message);
-
         });
 
     };
 
     return {
-        scope: {chat: '@'},
         link: link,
+        scope: {
+            chat: '=chat'
+        },
         restrict: 'E',
         templateUrl: 'public/js/admin/working/directives/chat/chat.html'
     };

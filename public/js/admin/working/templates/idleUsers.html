@@ -6,7 +6,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="user in lobby.idle_users" ng-click="activateChat([user])">
+    <tr ng-repeat="user in lobby.idle_users" ng-click="activateChat(user)">
         <td>{{user.username}}</td>
         <td align="right">4 minutes</td>
     </tr>

@@ -34,15 +34,18 @@ function lobby(io){
             //TODO: handle disconnects on client side
         });
 
-        socket.on('lobby.activateChat', function(clients){
+        socket.on('lobby.activateChat', function(user){
 
             //put the activating client in the array
-            clients.push(client);
+            var allClients = [];
+            allClients.push(user);
+            allClients.push(client);
 
-            var chat = chatUtils.createChat(clients, state);
+            var chat = chatUtils.createChat(allClients, state);
 
-            //send chat without clients socket info
-            socket.emit('lobby.activateChat', chat.lighten());
+            //notify admin of chat on client side
+            //io.to(chat.room).emit('lobby.activateChat', chat.lighten());
+            client.socket.emit('lobby.activateChat', chat.lighten());
 
             that.updateClient();
 
@@ -50,7 +53,6 @@ function lobby(io){
 
         socket.on('message', function(message){
             //sends message to all clients
-            console.log(message.chat.room);
             io.to(message.chat.room).emit('message', message);
             //TODO: persist somewhere
         });
