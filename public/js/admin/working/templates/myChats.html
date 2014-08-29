@@ -1,0 +1,20 @@
+<table class="chat-list-table clickable">
+    <thead>
+    <tr>
+        <th>Customer</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-if="myChats.length > 0" ng-repeat="chat in myChats" ng-class="{active: activeChat == chat}" ng-click="setActiveChat(chat)">
+        <td>
+            <p ng-repeat="client in chat.clients | filter:{type: 'user'}">
+                {{client.username}}
+            </p>
+        </td>
+    </tr>
+    <tr ng-if="myChats.length == 0">
+        <td>No Active Chats</td>
+    </tr>
+    </tbody>
+</table>
+

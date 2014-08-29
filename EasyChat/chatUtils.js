@@ -17,37 +17,60 @@ module.exports = {
         return exists;
     },
 
-    rejoinChat : function(client, state){
+    rejoinChats : function(client, state){
 
-        var room = false;
+        var chats = [];
 
         state.ongoing_chats.map(function(chat){
             chat.clients.map(function(cli){
                 if(client.session_id == cli.session_id) {
                     client.socket.join(chat.room);
-                    room = chat.room;
+                    if(typeof client.socket.emit === 'function'){
+                        client.socket.emit('lobby.activateChat', chat.lighten());
+                    }
+                    chats.push(chat);
                 }
             });
         });
 
-        return room;
+        return chats;
 
     },
 
-    createChat : function(pair, state){
+    //name of the room is the session_id of the first admin found.
+    createChat : function(clients, state){
 
-        var room_name = pair.user.session_id+pair.admin.session_id;
-        var clients = [];
+        var room_name = _.find(clients, {'type': 'admin'}).session_id;
 
-        //remove from idle users when activated, and add user to new chat
-        clients = clients.concat(_.remove(state.idle_users, function(client){
-            return client.session_id == pair.user.session_id;
-        }));
+        var roomClients = [];
 
-        //add admin to chat
-        clients = clients.concat(_.find(state.active_admins, {'session_id': pair.admin.session_id}));
+        clients.map(function(client){
+            //remove from idle users when activated, and add user to new chat
+            roomClients = roomClients.concat(_.remove(state.idle_users, function(cli){
+                return client.session_id == cli.session_id;
+            }));
 
-        var chat = new Chat(clients, room_name);
+            //add admin to chat
+            roomClients = roomClients.concat(_.find(state.active_admins, function(cli){
+                return client.session_id == cli.session_id;
+            }));
+        });
+
+        roomClients.map(function(client){
+            if(typeof client == 'undefined'){
+                _.remove(roomClients, function(client){
+                    return typeof client == 'undefined';
+                });
+            }
+        });
+
+        var chat = new Chat(roomClients, room_name);
+
+        //join each client to room
+        chat.clients.map(function(client){
+            //join each client to the room
+            client.socket.join(chat.room);
+        });
 
         state.ongoing_chats.push(chat);
 

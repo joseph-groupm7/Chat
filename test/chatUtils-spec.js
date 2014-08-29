@@ -17,7 +17,6 @@ lab.experiment('math', function () {
     lab.beforeEach(function (done) {
         done();
         state = require('../EasyChat/state')();
-        console.log(state);
     });
 
     describe("chatUtils.alreadyChatting", function () {
@@ -43,7 +42,7 @@ lab.experiment('math', function () {
         });
     });
 
-    describe("chatUtils.rejoinChat", function () {
+    describe("chatUtils.rejoinChats", function () {
         it("should rejoin a room by session_id", function (done) {
             var mocksocket = {
                 join: function(){
@@ -63,14 +62,14 @@ lab.experiment('math', function () {
             var chat = new Chat([client], 'room-name');
             state.ongoing_chats.push(chat);
 
-            expect(chatUtils.rejoinChat(client, state)).to.equal('room-name');
+            expect(chatUtils.rejoinChats(client, state)[0].room).to.equal('room-name');
 
             done();
         });
     });
 
     describe("chatUtils.createChat", function () {
-        it("should create a chat between a pair of clients, removing the user from idle_lobby", function (done) {
+        it("should create a chat with any number of clients, removing the users from idle_lobby", function (done) {
 
             var usersocket = {
                 join: function(){
@@ -100,17 +99,15 @@ lab.experiment('math', function () {
                 }
             };
 
-            var pair = {
-                user: new Client(usersocket),
-                admin: new Client(adminsocket)
-            };
+            var user_client = new Client(usersocket);
+            var admin_client = new Client(adminsocket);
 
-            state.idle_users.push( new Client(usersocket));
-            state.active_admins.push( new Client(adminsocket));
+            state.idle_users.push(user_client);
+            state.active_admins.push(admin_client);
 
-            var chat = chatUtils.createChat(pair, state);
+            var chat = chatUtils.createChat([user_client, admin_client], state);
 
-            expect(chat.room).to.equal('session_id1session_id2');
+            expect(chat.room).to.equal('session_id2');
             expect(state.idle_users.length).to.equal(0);
             expect(state.ongoing_chats.length).to.equal(1);
             expect(state.active_admins.length).to.equal(1);

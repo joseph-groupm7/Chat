@@ -24,27 +24,25 @@ function lobby(io){
         var client = new Client(socket);
 
         if(chatUtils.alreadyChatting(client, state)){
-            chatUtils.rejoinChat(client, state);
+            chatUtils.rejoinChats(client, state);
         }else{
             chatUtils.addClientToLobby(client, state);
             that.updateClient();
         }
 
         socket.on('disconnect', function(){
-            //TODO: disable room messages if count < 1
+            //TODO: handle disconnects on client side
         });
 
-        socket.on('lobby.activateChat', function(pair){
+        socket.on('lobby.activateChat', function(clients){
 
-            var chat = chatUtils.createChat(pair, state);
+            //put the activating client in the array
+            clients.push(client);
 
-            //join each client to room
-            chat.clients.map(function(client){
-                //join each client to the room
-                client.socket.join(chat.room);
-            });
+            var chat = chatUtils.createChat(clients, state);
 
-            socket.emit('lobby.activateChat', chat);
+            //send chat without clients socket info
+            socket.emit('lobby.activateChat', chat.lighten());
 
             that.updateClient();
 
@@ -52,7 +50,8 @@ function lobby(io){
 
         socket.on('message', function(message){
             //sends message to all clients
-            io.to(message.room).emit('message', message);
+            console.log(message.chat.room);
+            io.to(message.chat.room).emit('message', message);
             //TODO: persist somewhere
         });
 
