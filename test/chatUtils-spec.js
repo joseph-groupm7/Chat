@@ -14,7 +14,7 @@ var state = require('../EasyChat/state');
 
 lab.experiment('chatUtils', function () {
 
-    lab.beforeEach(function (done) {
+    lab.beforeEach(function(done) {
         done();
         state = require('../EasyChat/state')();
     });
@@ -37,7 +37,6 @@ lab.experiment('chatUtils', function () {
             state.ongoing_chats.push(chat);
 
             expect(chatUtils.alreadyChatting(client, state)).to.equal(true);
-
             done();
         });
     });
@@ -63,7 +62,6 @@ lab.experiment('chatUtils', function () {
             state.ongoing_chats.push(chat);
 
             expect(chatUtils.rejoinChats(client, state)[0].room).to.equal('room-name');
-
             done();
         });
     });
@@ -115,9 +113,54 @@ lab.experiment('chatUtils', function () {
             expect(state.idle_users.length).to.equal(0);
             expect(state.ongoing_chats.length).to.equal(1);
             expect(state.active_admins.length).to.equal(1);
-
             done();
         });
+    });
+
+    describe('chatUtils.refreshClientSocket', function(){
+       it('should find clients the client in the state with the same session_id and replace the socket', function(done){
+           var socket1 = {
+               id: '1',
+               join: function(){
+                   return true;
+               },
+               handshake: {
+                   headers: {
+                       referer: '...user...'
+                   },
+                   query: {
+                       session_id: 'session_id1'
+                   }
+               }
+           };
+           var socket2 = {
+               id: '2',
+               join: function(){
+                   return true;
+               },
+               handshake: {
+                   headers: {
+                       referer: '...user...'
+                   },
+                   query: {
+                       session_id: 'session_id1'
+                   }
+               }
+           };
+
+           var client1 = new Client(socket1);
+
+           state.idle_users.push(client1);
+
+           var client2 = new Client(socket2);
+
+           chatUtils.refreshClientSocket(client2, state);
+
+
+           expect(state.idle_users[0].socket.id).to.equal('2');
+           done();
+
+       });
     });
 
 });

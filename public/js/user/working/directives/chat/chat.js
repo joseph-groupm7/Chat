@@ -5,9 +5,7 @@ angular.module('user').directive('chat', function(socket){
         scope.messages = [];
 
         scope.sendMessage = function(message){
-
             socket.sendMessage(message, scope.chat);
-
         };
 
         socket.on('message', function(message){
@@ -17,6 +15,9 @@ angular.module('user').directive('chat', function(socket){
     };
 
     return {
+        scope: {
+            chat: '=chat'
+        },
         link: link,
         restrict: 'E',
         templateUrl: 'public/js/user/working/directives/chat/chat.html'

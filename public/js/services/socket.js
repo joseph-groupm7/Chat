@@ -4,7 +4,7 @@ angular.module('socket', ['ngCookies']).factory('socket', function($rootScope, $
 
     function Message(message, room, session_id){
         this.content = message;
-        this.type = 'admin';
+        this.type = window.location.href.indexOf('admin') == -1 ? 'user' : 'admin';
         this.room = room;
         this.session_id = session_id;
     }

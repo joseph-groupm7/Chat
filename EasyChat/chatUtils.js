@@ -21,12 +21,14 @@ module.exports = {
 
         var chats = [];
 
+        //looks for clients by session_id and if they are found, replace them with the new client, and rejoin the room
         state.ongoing_chats.map(function(chat){
             chat.clients.map(function(cli){
                 if(client.session_id == cli.session_id) {
-                    client.socket.join(chat.room);
-                    if(typeof client.socket.emit === 'function'){
-                        client.socket.emit('lobby.activateChat', chat.lighten());
+                    cli = client;
+                    cli.socket.join(chat.room);
+                    if(typeof cli.socket.emit === 'function'){
+                        cli.socket.emit('lobby.activateChat', chat.lighten());
                     }
                     chats.push(chat);
                 }
@@ -108,7 +110,28 @@ module.exports = {
 
     },
 
-    removeSockets : function(object){
-        //TODO: return object without socket properties...too heavy for client..
+    refreshClientSocket : function(client, state){
+
+        state.idle_users.map(function(cli){
+            if(client.session_id === cli.session_id){
+                state.idle_users[state.idle_users.indexOf(cli)] = client;
+            }
+        });
+
+        state.active_admins.map(function(cli){
+            if(client.session_id === cli.session_id){
+                state.active_admins[state.active_admins.indexOf(cli)] = client;
+            }
+        });
+
+        state.ongoing_chats.map(function(chat){
+            chat.clients.map(function(cli){
+                if(client.session_id === cli.session_id){
+                    state.ongoing_chats[state.ongoing_chats.indexOf(cli)] = client;
+                    cli.socket.join(chat.room);
+                }
+            });
+        });
+
     }
 };

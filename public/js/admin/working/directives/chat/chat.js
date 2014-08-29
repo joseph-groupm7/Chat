@@ -2,8 +2,6 @@ angular.module('admin').directive('chat', function(socket){
 
     var link = function(scope){
 
-        scope.messages = [];
-
         scope.sendMessage = function(message){
 
             socket.sendMessage(message, scope.chat);
@@ -11,7 +9,7 @@ angular.module('admin').directive('chat', function(socket){
         };
 
         socket.on('message', function(message){
-            scope.messages.push(message);
+            scope.chat.messages.push(message);
         });
 
     };

@@ -23,12 +23,15 @@ function lobby(io){
 
         var client = new Client(socket);
 
+        chatUtils.refreshClientSocket(client, state);
+
         if(chatUtils.alreadyChatting(client, state)){
             chatUtils.rejoinChats(client, state);
         }else{
             chatUtils.addClientToLobby(client, state);
-            that.updateClient();
         }
+
+        that.updateClient();
 
         socket.on('disconnect', function(){
             //TODO: handle disconnects on client side
@@ -43,18 +46,16 @@ function lobby(io){
 
             var chat = chatUtils.createChat(allClients, state);
 
-
-
-            //notify admin of chat on client side
-            io.to(chat.room).emit('lobby.activateChat');
-            client.socket.emit('lobby.activateChat', chat.lighten());
+            chat.clients.map(function(client){
+                client.socket.emit('lobby.activateChat', chat.lighten());
+            });
 
             that.updateClient();
 
         });
 
         socket.on('message', function(message){
-            //sends message to all clients
+            //sends message to all clients in room
             io.to(message.room).emit('message', message);
             //TODO: persist somewhere
         });

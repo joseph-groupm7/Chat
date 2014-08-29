@@ -5568,7 +5568,25 @@ th.hide-for-touch {
   width: 100%;
   padding-bottom: 42px; }
 
-.chats-list {
+.idleUsers {
+  padding-left: 0.9375rem;
+  padding-right: 0.9375rem;
+  width: 100%;
+  float: left;
+  padding-left: 0;
+  padding-right: 0;
+  min-height: 100%; }
+
+.ongoingChat {
+  padding-left: 0.9375rem;
+  padding-right: 0.9375rem;
+  width: 50%;
+  float: left;
+  padding-left: 0;
+  padding-right: 0;
+  min-height: 100%; }
+
+.myChats {
   padding-left: 0.9375rem;
   padding-right: 0.9375rem;
   width: 50%;
