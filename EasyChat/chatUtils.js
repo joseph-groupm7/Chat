@@ -1,5 +1,6 @@
 var Chat = require('../Models/Chat');
 var _ = require('lodash-node');
+var Q = require('Q');
 
 module.exports = {
     alreadyChatting : function(client, state){
@@ -39,9 +40,41 @@ module.exports = {
 
     },
 
+    getClientBySession : function(session_id, state){
+
+        var i;
+
+        for(i=0;i<state.idle_users.length;i++){
+            if (session_id === state.idle_users[i].session_id) {
+                return state.idle_users[i];
+            }
+        }
+
+        for(i=0;i<state.active_admins.length;i++){
+            if (session_id === state.active_admins[i].session_id) {
+                return state.active_admins[i];
+            }
+        }
+
+        for(i=0;i<state.ongoing_chats.length;i++){
+            if (session_id === state.ongoing_chats[i].session_id) {
+                return state.ongoing_chats[i];
+            }
+        }
+
+    },
+
     //name of the room is the session_id of the first admin found.
     createChat : function(clients, state){
 
+        //ensure all clients have a session_id, or throw error
+        for(var i=0;i<clients.length;i++){
+            if(!clients[i].hasOwnProperty('type')){
+                clients[i] = this.getClientBySession(clients[i].session_id, state);
+            }
+        }
+
+        //set room name based on first admins name, or throw error if no admin
         var room_name = _.find(clients, {'type': 'admin'}).session_id;
 
         var roomClients = [];
@@ -93,6 +126,7 @@ module.exports = {
 
             if(!userExists){
                 state.idle_users.push(client);
+                return 'idle_users';
             }
 
         }else if(client.type === 'admin'){
@@ -105,6 +139,7 @@ module.exports = {
 
             if(!adminExists){
                 state.active_admins.push(client);
+                return 'active_admins';
             }
         }
 
@@ -112,26 +147,33 @@ module.exports = {
 
     refreshClientSocket : function(client, state){
 
-        state.idle_users.map(function(cli){
-            if(client.session_id === cli.session_id){
-                state.idle_users[state.idle_users.indexOf(cli)] = client;
-            }
-        });
+        var i;
 
-        state.active_admins.map(function(cli){
-            if(client.session_id === cli.session_id){
-                state.active_admins[state.active_admins.indexOf(cli)] = client;
+        //check idle_users
+        for(i=0;i<state.idle_users.length;i++){
+            if (client.session_id === state.idle_users[i].session_id) {
+                return state.idle_users[i] = client;
             }
-        });
+        }
 
-        state.ongoing_chats.map(function(chat){
-            chat.clients.map(function(cli){
-                if(client.session_id === cli.session_id){
-                    state.ongoing_chats[state.ongoing_chats.indexOf(cli)] = client;
-                    cli.socket.join(chat.room);
+        //check active_admins
+        for(i=0;i<state.active_admins.length;i++){
+            if (client.session_id === state.active_admins[i].session_id) {
+                return state.active_admins[i] = client;
+            }
+        }
+
+        //check ongoing_chats
+        for(i=0;i<state.ongoing_chats.length;i++){
+            for(var a=0;a<state.ongoing_chats[i].clients[a].length;a++){
+                if (client.session_id === state.ongoing_chats[i].clients[a].session_id) {
+                    return state.ongoing_chats[i].clients[a] = client;
                 }
-            });
-        });
+            }
+        }
+
+        //else add it where it belongs based on client type
+        return this.addClientToLobby(client, state);
 
     }
 };
