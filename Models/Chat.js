@@ -2,6 +2,7 @@ var _ = require('lodash-node');
 
 module.exports = function(clients, room){
     var that = this;
+    this.timestamp =
     this.messages = [];
     this.clients = clients;
     this.room = room;

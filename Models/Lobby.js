@@ -6,6 +6,16 @@ var _ = require('lodash-node');
 var chatUtils = require('../EasyChat/chatUtils');
 var util = require('util');
 
+var Hashids = require("hashids");
+var Hash = new Hashids("this is my salt");
+
+var mysql      = require('mysql');
+var connection = mysql.createConnection({
+    host     : 'localhost',
+    user     : 'root',
+    password : 'root',
+    database : 'testdb'
+});
 
 function lobby(io){
 
@@ -45,6 +55,13 @@ function lobby(io){
             allClients.push(client);
 
             var chat = chatUtils.createChat(allClients, state);
+            console.log(chat.room);
+            console.log('br');
+            console.log(Hash.encrypt('asdf asdf'));
+            connection.query('insert into chat (room, transcript) values ( ?, ? )', [Hash.encrypt(chat.room), ''], function(err, results){
+                console.log(err);
+                console.log(results);
+            });
 
             chat.clients.map(function(client){
                 client.socket.emit('lobby.activateChat', chat.lighten());
@@ -57,7 +74,10 @@ function lobby(io){
         socket.on('message', function(message){
             //sends message to all clients in room
             io.to(message.room).emit('message', message);
-            //TODO: persist somewhere
+
+            //persist to db
+            connection.query('update chat set transcript = concat(transcript, ' + connection.escape(message.content) + ') where chat = ' + Hash.encrypt(message.room));
+
         });
 
         that.updateClient();
