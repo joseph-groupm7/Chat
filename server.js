@@ -2,7 +2,7 @@ var hapi = require('hapi');
 var routes = require('./routes');
 var socket = require('socket.io');
 var _ = require('lodash-node');
-var Lobby = require('./Models/Lobby');
+var Lobby = require('./EasyChat/Lobby');
 
 var server = new hapi.Server(3000);
 

@@ -1,4 +1,4 @@
-var Chat = require('../Models/Chat');
+var Chat = require('../EasyChat/Chat');
 var _ = require('lodash-node');
 var Q = require('Q');
 
@@ -65,7 +65,7 @@ module.exports = {
     },
 
     //name of the room is the session_id of the first admin found.
-    createChat : function(clients, state){
+    createChat : function(chat_id, clients, state){
 
         //ensure all clients have a session_id, or throw error
         for(var i=0;i<clients.length;i++){
@@ -75,7 +75,7 @@ module.exports = {
         }
 
         //set room name based on first admins name, or throw error if no admin
-        var room_name = _.find(clients, {'type': 'admin'}).session_id;
+        var room_name = chat_id;
 
         var roomClients = [];
 
@@ -164,16 +164,22 @@ module.exports = {
         }
 
         //check ongoing_chats
-        for(i=0;i<state.ongoing_chats.length;i++){
-            for(var a=0;a<state.ongoing_chats[i].clients[a].length;a++){
-                if (client.session_id === state.ongoing_chats[i].clients[a].session_id) {
-                    return state.ongoing_chats[i].clients[a] = client;
+        var inchat = false;
+        state.ongoing_chats.map(function(chat){
+            chat.clients.map(function(cli){
+                if (client.session_id === cli.session_id) {
+
+                    cli = client;
+                    inchat = true;
+
                 }
-            }
-        }
+            });
+        });
 
         //else add it where it belongs based on client type
-        return this.addClientToLobby(client, state);
+        if(!inchat){
+            this.addClientToLobby(client, state);
+        }
 
     }
 };

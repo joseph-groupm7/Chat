@@ -1,80 +1,30 @@
-# Front End Objects
+# Lobby API
 
-### Critical events coming from the server: 
+## Creating a chat
 
-```js
-socket.on('lobby', function(lobby){
-        console.log(lobby)
-});
+event: lobby.chat
+message: (USER) must implement
+{
+    session_id: value
+}
 
-socket.on('lobby.activateChat', function(room_name){
-        socket.setRoom(room_name);
-});
+success event: lobby.chat
+to: everyone in chat
+message: (CHAT)
+{
+    messages: ARRAY,
+    clients: ARRAY,
+    room: id
+}
 
-socket.on('message', function(message){
-        console.log(message);
-});
-```
+## Sending a message
+event: lobby.message
+message: (MESSAGE) must implement
+{
+    content: STRING,
+    room: id
+}
 
-### Activating a private chat between users:
-
-```js
-socket.emit('lobby.activateChat', {user_id: 'some user id',admin_id: socket.getID()});
-```
-
-### Sending messages
-
-```js
-socket.sendMessage('message');
-```
-
-
-
-# Application Objects
-
-## Lobby
-
-### Creation:
-
-```js
-var socket = require('socket.io');
-var io = socket.listen(server.listener);
-var lobby = new Lobby(io);
-```
-
-### Interface:
-```js
-lobby.idle_users **Array** of **Users**
-lobby.ongoing_chats **Array** of **Chats**
-lobby.active_admins **Array** of **Admins**
-```
-
-## Client
-
-> A representation of a user (admin or customer) that can be added to rooms
-
-### Creation:
-
-```js
-var client = new Client(socket.id, 'username');
-```
-### Interface:
-
-```js
-client.id
-client.name
-```
-
-## Chat
-
-> A representation of multiple clients that are communicating
-
-### Creation: 
-
-```js
-var user = new Client(socket.id, 'user1');
-var admin = new Client(socket.id, 'admin1');
-var clients = [user, admin];
-var chat = new Chat(clients, 'name of the room');
-```
-
+success event: lobby.message
+to: everyone in chat
+message: STRING content
