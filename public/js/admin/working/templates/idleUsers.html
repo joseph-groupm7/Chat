@@ -11,7 +11,7 @@
             <td>{{user.username}}</td>
             <td align="right">4 minutes</td>
         </tr>
-        <tr ng-show="!idleList.getIdleUsers().length">
+        <tr ng-show="lobby.idle_users.length == 0">
             <td colspan="2">No Idle Users</td>
         </tr>
         </tbody>

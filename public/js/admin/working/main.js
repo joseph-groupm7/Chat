@@ -1,4 +1,4 @@
-angular.module('admin', ['socket', 'ui.router', 'ngCookies']).config(function($stateProvider, $urlRouterProvider) {
+angular.module('admin', ['lobby', 'ui.router', 'ngCookies']).config(function($stateProvider, $urlRouterProvider) {
 
     $urlRouterProvider.otherwise("/ongoingChats");
 
@@ -14,36 +14,18 @@ angular.module('admin', ['socket', 'ui.router', 'ngCookies']).config(function($s
         .state("activeAdmins", {
             url: '/activeAdmins',
             templateUrl: "/public/js/admin/working/templates/activeAdmins.html"
-        })
-        .state("myChats", {
-            url: '/myChats',
-            templateUrl: "/public/js/admin/working/templates/myChats.html"
         });
 
 });
 
-angular.module('admin').controller('AdminController', function($scope, socket, $location, $rootScope, $cookies){
+angular.module('admin').controller('LobbyController', function($scope, lobby){
 
-    $cookies.username = 'admin-username';
-
-    $rootScope.location = $location;
-
-    $scope.myChats = [];
-
-    socket.on('lobby', function(lobby){
-        $scope.lobby = lobby;
+    $scope.$watch(function(){
+        return lobby.lobby
+    }, function(newLobby, oldLobby){
+        if (typeof newLobby !== 'undefined') {
+            $scope.lobby = newLobby;
+        }
     });
-
-    $scope.activateChat = function(user){
-        socket.emit('lobby.activateChat', user);
-    };
-
-    socket.on('lobby.activateChat', function(chat){
-        $scope.myChats.push(chat);
-    });
-
-    $scope.setActiveChat = function(chat){
-        $scope.activeChat = chat;
-    };
 
 });
