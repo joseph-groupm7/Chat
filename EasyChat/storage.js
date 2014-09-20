@@ -12,11 +12,11 @@ module.exports = function(database, user, password, host){
     });
 
     //returns message on success
-    module.saveMessage = function(chat_id, text, callback){
+    module.saveMessage = function(room_id, message, name, callback){
 
         module.connection.query(
             'insert into messages set ?',
-            {chat_id: chat_id, text: text},
+            {room_id: room_id, message: message, name: name},
         function(err, result){
             if(err) throw err;
             callback(text);
@@ -36,14 +36,14 @@ module.exports = function(database, user, password, host){
 
     };
 
-    module.getMessages = function(chat, callback){
+    module.getMessages = function(room_id, callback){
 
         module.connection.query(
-            'select text from messages where chat_id = ?',
-            [chat.room],
+            'select message from messages where chat_id = ?',
+            [room_id],
             function(err, result){
                 if(err) throw err;
-                callback(result.insertId);
+                callback(result);
             })
 
     };

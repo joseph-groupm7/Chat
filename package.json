@@ -2,21 +2,22 @@
   "name": "Node-Chat",
   "main": "server.js",
   "dependencies": {
-    "hapi": "^6.4.0",
+    "hapi": "^6.8.1",
     "lodash-node": "^2.4.1",
     "mysql": "^2.4.3",
     "socket.io": "^1.1.0",
     "yar": "^2.4.0"
   },
   "devDependencies": {
-    "gulp": "^3.8.7",
+    "gulp": "^3.8.8",
     "gulp-concat": "^2.3.4",
     "gulp-lab": "^1.0.0",
     "gulp-livereload": "^2.1.1",
     "gulp-nodemon": "^1.0.4",
     "gulp-notify": "^1.5.0",
     "gulp-order": "^1.1.1",
+    "gulp-ruby-sass": "^0.7.1",
     "gulp-sass": "^0.7.3",
-    "lab": "^4.2.0"
+    "lab": "^4.4.4"
   }
 }

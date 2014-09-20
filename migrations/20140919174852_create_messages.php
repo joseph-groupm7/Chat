@@ -23,9 +23,10 @@ class CreateMessages extends AbstractMigration
     public function up()
     {
         $messages = $this->table('messages');
-        $messages->addColumn('text', 'string')
-                 ->addColumn('chat_id', 'integer')
-                 ->addForeignKey('chat_id', 'chats', 'id', array('delete' => 'CASCADE'))
+        $messages->addColumn('name', 'string')
+                 ->addColumn('message', 'string')
+                 ->addColumn('room_id', 'integer')
+                 ->addForeignKey('room_id', 'rooms', 'id', array('delete' => 'CASCADE'))
                  ->addColumn('created_at', 'timestamp')
                  ->save();
 

@@ -5,3 +5,6 @@ bower_components
 public/js/admin/dist
 public/js/user/dist
 vendor/
+.sass-cache/
+public/css/admin/dist/style.css.map
+public/css/user/dist/style.css.map

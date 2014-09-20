@@ -2,7 +2,8 @@ angular.module('lobby', ['ngCookies']).service('lobby', function($rootScope, $co
     var that = this;
     var socket = io({ query: 'session_id=' + $cookies.session + '&username=' +  $cookies.username});
 
-    socket.on('lobby.lobby', function(newLobby){
+    socket.on('lobby.state', function(newLobby){
+        console.log(newLobby);
         that.lobby = newLobby;
         $rootScope.$digest();
     });

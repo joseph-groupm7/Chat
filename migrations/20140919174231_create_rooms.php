@@ -2,7 +2,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class CreateChats extends AbstractMigration
+class CreateRooms extends AbstractMigration
 {
     /**
      * Change Method.
@@ -22,7 +22,7 @@ class CreateChats extends AbstractMigration
      */
     public function up()
     {
-        $chats = $this->table('chats');
+        $chats = $this->table('rooms');
         $chats->addTimestamps()
               ->save();
     }
@@ -32,6 +32,6 @@ class CreateChats extends AbstractMigration
      */
     public function down()
     {
-        $this->dropTable('chats');
+        $this->dropTable('rooms');
     }
 }

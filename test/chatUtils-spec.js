@@ -55,10 +55,10 @@ lab.experiment('chatUtils', function () {
             };
 
             var client = new Client(mocksocket);
-            var chat = new Chat([client], 'room-name');
+            var chat = new Chat([client], 1);
             state.ongoing_chats.push(chat);
 
-            expect(chatUtils.rejoinChats(client, state)[0].room).to.equal('room-name');
+            expect(chatUtils.rejoinChats(client, state)[0].room_id).to.equal(1);
             done();
         });
     });
@@ -107,7 +107,7 @@ lab.experiment('chatUtils', function () {
 
             var chat = chatUtils.createChat(1, [user_client, admin_client], state);
 
-            expect(chat.room).to.equal(1);
+            expect(chat.room_id).to.equal(1);
             expect(state.idle_users.length).to.equal(0);
             expect(state.ongoing_chats.length).to.equal(1);
             expect(state.active_admins.length).to.equal(1);
@@ -202,7 +202,6 @@ lab.experiment('chatUtils', function () {
             expect(state.idle_users.length).to.equal(1);
             expect(state.ongoing_chats.length).to.equal(0);
             expect(state.active_admins.length).to.equal(1);
-
 
             chatUtils.createChat(1, [client1, client2], state);
 

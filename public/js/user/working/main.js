@@ -1,6 +1,6 @@
-angular.module('user', ['socket', 'ngCookies']);
+angular.module('user', ['lobby', 'ngCookies']);
 
-angular.module('user').controller('UserController', function($scope, socket, $cookies){
+angular.module('user').controller('UserController', function($scope, lobby, $cookies){
 
     $cookies.username = 'user-username';
 

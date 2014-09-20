@@ -10,41 +10,64 @@ var storage = require('../EasyChat/storage')('testdb', 'root', 'root', 'localhos
 function lobby(io){
 
     io.use(function(socket, next){
-        if(socket.handshake.query.session_id != 'undefined' && socket.handshake.query.username != 'undefined'){
-            next();
+        if(socket.handshake.query.session_id == 'undefined'){
+            throw 'session_id not on query';
         }
+
+        if(socket.handshake.headers.referer == 'undefined'){
+            throw 'referrer not on header';
+        }
+
+
+        next();
     });
 
     io.on('connection', function(socket){
 
         var client = new Client(socket);
 
-        //returns where the client was placed in 'state'
-        chatUtils.refreshClientSocket(client, state);
-
-        io.emit('lobby.lobby', state.lighten());
+        //1. finds client in state and updates socket to the newly created one
+        //2. rejoins any ongoing chats they belonged to
+        //3. if client is an admin: emits the state to the client
+        //   if client is a user and is in an ongoing chat: emits messages to the client
+        chatUtils.refreshClientSocket(client, state, function(room_id){
+            if(client.type === 'user' && room_id){
+                storage.getMessages(room_id, function(messages){
+                    client.socket.emit('lobby.messages', messages);
+                });
+            }else if(client.type === 'admin'){
+                client.socket.emit('lobby.state', state.lighten());
+            }
+        });
 
         socket.on('disconnect', function(){
             //TODO: handle disconnects on client side
         });
 
-        socket.on('lobby.chat', function(user){
+        socket.on('lobby.chat', function(user_session_id){
 
-            storage.saveChat(function(chat_id){
+            var user = chatUtils.getClientBySession(user_session_id);
 
-                var chat = chatUtils.createChat(chat_id, [user, client], state);
+            storage.saveChat(function(room_id){
 
-                io.to(chat.room).emit('lobby.chat', chat.lighten());
+                chatUtils.createChat(room_id, [user, client], state);
 
-                io.emit('lobby.lobby', state.lighten());
+                //notify user
+                user.socket.emit('lobby.start');
+
+                //update admin
+                client.socket.emit('lobby.state', state.lighten());
 
             });
 
         });
 
-        socket.on('lobby.message', function(message){
-            storage.saveMessage(message.room, message.content, function(){
-                io.to(message.room).emit('lobby.message', message.content);
+        //needs a room and a message, saves to database and returns messages to that room
+        socket.on('lobby.message', function(room_id, message){
+            storage.saveMessage(room_id, message, client.name, function(){
+                storage.getMessages(room_id, function(messages){
+                    io.to(room_id).emit('lobby.messages', messages);
+                });
             });
         });
 
