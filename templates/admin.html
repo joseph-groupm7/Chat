@@ -58,13 +58,11 @@
 			<div id="content-container">
 
 				<!-- List View -->
-
                 <ui-view></ui-view>
-
 				<!-- List View -->
 
                 <!-- Chat Window -->
-                <chat ng-if="location.url() == '/myChats' || location.url() == '/ongoingChats'" chat="activeChat"></chat>
+                <chat ng-show="activeChat" chat="activeChat"></chat>
                 <!-- Chat Window -->
 
 			</div>

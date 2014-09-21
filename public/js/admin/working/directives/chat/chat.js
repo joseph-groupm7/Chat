@@ -2,9 +2,22 @@ angular.module('admin').directive('chat', function(lobby){
 
     var link = function(scope){
 
-        lobby.getMessages(chat, function(messages){
-            scope.chat.messages = messages;
+        scope.$watch(function(){
+            return scope.chat
+        }, function(newChat, oldChat){
+            if (typeof newChat !== 'undefined') {
+                scope.chat = newChat;
+                lobby.getMessages(scope.chat.room_id, function(messages){
+                    scope.chat.messages = messages;
+                });
+            }
         });
+
+        scope.sendMessage = function(message){
+            lobby.sendMessage(scope.chat.room_id, message);
+            scope.chat.messages.push({message: message, type: 'admin'});
+            scope.message = '';
+        };
 
     };
 
@@ -14,7 +27,7 @@ angular.module('admin').directive('chat', function(lobby){
             chat: '=chat'
         },
         restrict: 'E',
-        templateUrl: 'public/js/admin/working/directives/chat/chat.html'
+        templateUrl: '/public/js/admin/working/directives/chat/chat.html'
     };
 
 });

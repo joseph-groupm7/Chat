@@ -17,22 +17,15 @@ lab.experiment('chatUtils', function () {
     describe("chatUtils.alreadyChatting", function () {
         it("should tell me if a user is in a chat room by session", function (done) {
             var state = require('../EasyChat/state')();
-            var mocksocket = {
-                handshake: {
-                    headers: {
-                        referer: '...user...'
-                    },
-                    query: {
-                        session_id: 'session_id'
-                    }
-                }
-            };
 
-            var client = new Client(mocksocket);
-            var chat = new Chat([client], 'room-name');
+            var client = new Client({}, 'name_of_user', 'user', 'session_id');
+
+            var chat = new Chat([client], 1);
+
             state.ongoing_chats.push(chat);
 
             expect(chatUtils.alreadyChatting(client, state)).to.equal(true);
+
             done();
         });
     });
@@ -40,25 +33,15 @@ lab.experiment('chatUtils', function () {
     describe("chatUtils.rejoinChats", function () {
         it("should rejoin a room by session_id", function (done) {
             var state = require('../EasyChat/state')();
-            var mocksocket = {
-                join: function(){
-                    return true;
-                },
-                handshake: {
-                    headers: {
-                        referer: '...user...'
-                    },
-                    query: {
-                        session_id: 'session_id'
-                    }
-                }
-            };
 
-            var client = new Client(mocksocket);
+            var client = new Client({join: function(){return true;}}, 'name_of_user', 'user', 'session_id');
+
             var chat = new Chat([client], 1);
+
             state.ongoing_chats.push(chat);
 
             expect(chatUtils.rejoinChats(client, state)[0].room_id).to.equal(1);
+
             done();
         });
     });
@@ -67,36 +50,8 @@ lab.experiment('chatUtils', function () {
         it("should create a chat with any number of clients, removing the users from idle_lobby", function (done) {
             var state = require('../EasyChat/state')();
 
-            var usersocket = {
-                join: function(){
-                    return true;
-                },
-                handshake: {
-                    headers: {
-                        referer: '...user...'
-                    },
-                    query: {
-                        session_id: 'session_id1'
-                    }
-                }
-            };
-
-            var adminsocket = {
-                join: function(){
-                    return true;
-                },
-                handshake: {
-                    headers: {
-                        referer: '...admin...'
-                    },
-                    query: {
-                        session_id: 'session_id2'
-                    }
-                }
-            };
-
-            var user_client = new Client(usersocket);
-            var admin_client = new Client(adminsocket);
+            var user_client = new Client({join: function(){return true;}}, 'name_of_user', 'user', 'session_id1');
+            var admin_client = new Client({join: function(){return true;}}, 'name_of_admin', 'admin', 'session_id2');
 
             state.idle_users.push(user_client);
             state.active_admins.push(admin_client);
@@ -119,82 +74,33 @@ lab.experiment('chatUtils', function () {
     describe('chatUtils.refreshClientSocket', function(){
        it('should find clients the client in the state with the same session_id and replace the socket', function(done){
            var state = require('../EasyChat/state')();
-           var socket1 = {
-               id: '1',
-               join: function(){
-                   return true;
-               },
-               handshake: {
-                   headers: {
-                       referer: '...user...'
-                   },
-                   query: {
-                       session_id: 'session_id1'
-                   }
-               }
-           };
-           var socket2 = {
-               id: '2',
-               join: function(){
-                   return true;
-               },
-               handshake: {
-                   headers: {
-                       referer: '...user...'
-                   },
-                   query: {
-                       session_id: 'session_id1'
-                   }
-               }
-           };
 
-           var client1 = new Client(socket1);
+           var client1 = new Client(
+               {
+                   id: 1,
+                   join: function(){return true;}
+               }, 'name_of_user', 'user', 'session_id1');
 
            state.idle_users.push(client1);
 
-           var client2 = new Client(socket2);
+           var client2 = new Client(
+               {
+                   id: 2,
+                   join: function(){return true;}
+               }, 'name_of_user', 'user', 'session_id1');
 
            chatUtils.refreshClientSocket(client2, state);
 
-           expect(state.idle_users[0].socket.id).to.equal('2');
+           expect(state.idle_users[0].socket.id).to.equal(2);
            done();
 
        });
 
         it('should_not_add_client_back_in_idle_users_after_disconnects', function(done){
             var state = require('../EasyChat/state')();
-            var socket1 = {
-                id: '1',
-                join: function(){
-                    return true;
-                },
-                handshake: {
-                    headers: {
-                        referer: '...user...'
-                    },
-                    query: {
-                        session_id: 'session_id1'
-                    }
-                }
-            };
 
-            var socket2 = {
-                id: '2',
-                join: function(){
-                    return true;
-                },
-                handshake: {
-                    headers: {
-                        referer: '...admin...'
-                    },
-                    query: {
-                        session_id: 'session_id2'
-                    }
-                }
-            };
-
-            var client1 = new Client(socket1);
-            var client2 = new Client(socket2);
+            var client1 = new Client({join: function(){return true;}}, 'name_of_user', 'user', 'session_id1');
+            var client2 = new Client({join: function(){return true;}}, 'name_of_admin', 'admin', 'session_id2');
 
             state.idle_users.push(client1);
             state.active_admins.push(client2);
@@ -224,22 +130,8 @@ lab.experiment('chatUtils', function () {
     describe('chatUtils.getClientBySession', function(){
         it('should return a client object when given a session id that exists in the lobby', function(done){
             var state = require('../EasyChat/state')();
-            var socket1 = {
-                id: '1',
-                join: function(){
-                    return true;
-                },
-                handshake: {
-                    headers: {
-                        referer: '...user...'
-                    },
-                    query: {
-                        session_id: 'session_id1'
-                    }
-                }
-            };
 
-            var client1 = new Client(socket1);
+            var client1 = new Client({join: function(){return true;}}, 'name_of_user', 'user', 'session_id1');
 
             state.idle_users.push(client1);
 

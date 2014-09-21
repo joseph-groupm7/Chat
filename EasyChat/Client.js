@@ -1,26 +1,17 @@
 var _ = require('lodash-node');
 
-module.exports = function(socket){
-    var that = this;
+module.exports = function(socket, name, type, session_id){
+
     this.socket = socket;
 
-    this.username = socket.handshake.query.username;
+    this.name = name;
 
-    if(_.contains(socket.handshake.headers.referer, 'admin')){
-        this.type = 'admin';
-    }else{
-        this.type = 'user';
-    }
+    this.type = type;
 
-    this.session_id = socket.handshake.query.session_id;
+    this.session_id = session_id;
 
     this.lighten = function(){
         return _.omit(this, 'socket')
     };
 
-    this.lighten = function(){
-        var lightClient = _.cloneDeep(that);
-        lightClient.socket = undefined;
-        return lightClient;
-    }
 };

@@ -8,7 +8,6 @@
     <tbody>
         <tr ng-repeat="admin in lobby.active_admins">
             <td>{{admin.username}}</td>
-            <td align="right">{{admin.conversations}}</td>
         </tr>
 
         <tr ng-show="lobby.active_admins.length == 0">

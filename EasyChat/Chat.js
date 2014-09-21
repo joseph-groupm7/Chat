@@ -2,7 +2,6 @@ var _ = require('lodash-node');
 
 module.exports = function(clients, room_id){
     var that = this;
-    this.messages = [];
     this.clients = clients;
     this.room_id = room_id;
     this.lighten = function(){

@@ -18,7 +18,9 @@ angular.module('admin', ['lobby', 'ui.router', 'ngCookies']).config(function($st
 
 });
 
-angular.module('admin').controller('LobbyController', function($scope, lobby){
+angular.module('admin').controller('LobbyController', function($scope, lobby, $cookies){
+
+    $cookies.name = 'admin_name';
 
     $scope.$watch(function(){
         return lobby.lobby

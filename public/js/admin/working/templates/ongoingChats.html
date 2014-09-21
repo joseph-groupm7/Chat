@@ -1,4 +1,4 @@
-<div class="ongoingChat">
+<div class="ongoingChat" ng-controller="OngoingChatsController">
     <table class="chat-list-table clickable">
         <thead>
             <tr>
@@ -8,7 +8,7 @@
         </thead>
         <tbody>
 
-        <tr ng-repeat="chat in lobby.ongoing_chats" ng-class="{active: activeChat == chat}" ng-click="setActiveChat(chat)">
+        <tr ng-repeat="chat in lobby.ongoing_chats" ng-class="{active: activeChat == chat}" ng-click="viewChat(chat)">
             <td>
                 <p ng-repeat="client in chat.clients | filter:{type : 'user'} ">
                     {{client.username}}

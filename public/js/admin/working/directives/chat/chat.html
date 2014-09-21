@@ -2,7 +2,7 @@
     <div id="chat-overflow">
         <ul>
             <li ng-repeat="message in chat.messages track by $index" ng-class="{userMessage: message.type == 'user', adminMessage: message.type == 'admin' }">
-                {{message.content}}
+                {{message.message}}
             </li>
         </ul>
     </div>

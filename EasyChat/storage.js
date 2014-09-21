@@ -12,11 +12,10 @@ module.exports = function(database, user, password, host){
     });
 
     //returns message on success
-    module.saveMessage = function(room_id, message, name, callback){
-
+    module.saveMessage = function(room_id, text, name, callback){
         module.connection.query(
             'insert into messages set ?',
-            {room_id: room_id, message: message, name: name},
+            {room_id: room_id, message: text, name: name},
         function(err, result){
             if(err) throw err;
             callback(text);
@@ -28,23 +27,35 @@ module.exports = function(database, user, password, host){
     module.saveChat = function(callback){
 
         module.connection.query(
-            'insert into chats values(NULL, NOW(), NOW())',
+            'insert into rooms values(NULL, NOW(), NOW())',
         function(err, result){
             if(err) throw err;
             callback(result.insertId);
-        })
+        });
 
     };
 
     module.getMessages = function(room_id, callback){
 
         module.connection.query(
-            'select message from messages where chat_id = ?',
+            'select message from messages where room_id = ?',
             [room_id],
             function(err, result){
                 if(err) throw err;
                 callback(result);
-            })
+            });
+
+    };
+
+    module.authUser = function(email, password){
+
+        module.connection.query(
+            'select message from messages where room_id = ?',
+            [room_id],
+            function(err, result){
+                if(err) throw err;
+                callback(result);
+            });
 
     };
 
