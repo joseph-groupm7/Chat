@@ -47,14 +47,14 @@ module.exports = function(database, user, password, host){
 
     };
 
-    module.authUser = function(email, password){
+    module.getUserByEmail = function(email, callback){
 
         module.connection.query(
-            'select message from messages where room_id = ?',
-            [room_id],
+            'select * from users where email = ?',
+            [email],
             function(err, result){
                 if(err) throw err;
-                callback(result);
+                callback(result[0]);
             });
 
     };

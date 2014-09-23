@@ -46,13 +46,28 @@ lab.experiment('api', function () {
                 }
             };
             request(options, function(error, response){
-                console.log(response.body);
                 var jwt = require('jsonwebtoken');
                 var token = jwt.decode(response.body, require('../secret'));
                 expect(token.hasOwnProperty('name')).to.equal(true);
                 expect(token.hasOwnProperty('email')).to.equal(true);
                 expect(token.hasOwnProperty('type')).to.equal(true);
                 expect(token.hasOwnProperty('iat')).to.equal(true);
+                done();
+            });
+        });
+
+        it("should return failure if invalid passowrd", function (done) {
+            var options = {
+                method: 'POST',
+                url: 'http://localhost:3000/chat/admin/auth',
+                json: {
+                    name: "logan",
+                    email: "logan@loganhenson.com",
+                    password: 'invalid'
+                }
+            };
+            request(options, function(error, response){
+                expect(response.body).to.equal('failure');
                 done();
             });
         });

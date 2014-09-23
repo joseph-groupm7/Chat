@@ -6,6 +6,7 @@ var Lobby = require('./EasyChat/Lobby');
 
 var server = new hapi.Server(3000);
 
+//cookies
 server.pack.register({
     plugin: require('yar'),
     options: {
@@ -15,6 +16,11 @@ server.pack.register({
         }
     }
 }, function(err){console.log(err)});
+
+//authentication
+server.pack.register(require('hapi-auth-basic'), function (err) {
+    server.auth.strategy('simple', 'basic', { validateFunc: require('./validate') });
+});
 
 //load routes
 routes.forEach(function(route){

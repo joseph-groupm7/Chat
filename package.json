@@ -2,7 +2,9 @@
   "name": "Node-Chat",
   "main": "server.js",
   "dependencies": {
+    "bcrypt": "^0.8.0",
     "hapi": "^6.8.1",
+    "hapi-auth-basic": "^1.1.1",
     "jsonwebtoken": "^1.1.2",
     "lodash-node": "^2.4.1",
     "mysql": "^2.4.3",
