@@ -2,9 +2,5 @@
 node_modules
 bower_components
 .idea
-public/js/admin/dist
-public/js/user/dist
-vendor/
-.sass-cache/
-public/css/admin/dist/style.css.map
-public/css/user/dist/style.css.map
+.env
+vendor

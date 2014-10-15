@@ -1,7 +1,6 @@
 module.exports = function (email, password, callback) {
 
-    var storage = require('./EasyChat/storage')('testdb', 'root', 'root', 'localhost');
-    var Bcrypt = require('bcrypt');
+    var storage = require('./EasyChat/storage')(process.env.database, process.env.username, process.env.password, process.env.hostname);
 
     storage.getUserByEmail(email, function(user){
 

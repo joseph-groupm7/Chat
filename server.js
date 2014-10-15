@@ -1,3 +1,6 @@
+var dotenv = require('dotenv');
+dotenv.load();
+
 var Hapi = require('hapi');
 var routes = require('./routes');
 var socket = require('socket.io');

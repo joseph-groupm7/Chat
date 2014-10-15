@@ -5,14 +5,14 @@ var socket = require('socket.io');
 var Client = require('./Client');
 var chatUtils = require('./chatUtils');
 var state = require('./state')();
-var storage = require('./storage')('testdb', 'root', 'root', 'localhost');
+var storage = require('./storage')(process.env.database, process.env.username, process.env.password, process.env.hostname);
 var cookies = require('./cookies');
 var socketioJwt   = require("socketio-jwt");
 
 function lobby(io){
 
     io.use(socketioJwt.authorize({
-        secret: require('../secret'),
+        secret: process.env.secret,
         handshake: true
     }));
 

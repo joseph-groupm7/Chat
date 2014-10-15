@@ -2,24 +2,18 @@
   "name": "Node-Chat",
   "main": "server.js",
   "dependencies": {
-    "bcrypt": "^0.8.0",
+    "dotenv": "^0.4.0",
     "hapi": "^7.0.0",
-    "hapi-auth-basic": "^1.1.1",
     "jsonwebtoken": "^1.1.2",
     "lodash-node": "^2.4.1",
     "mysql": "^2.4.3",
     "socket.io": "^1.1.0",
-    "socketio-jwt": "^2.3.5",
-    "yar": "^2.4.0"
+    "socketio-jwt": "^2.3.5"
   },
   "devDependencies": {
     "gulp": "^3.8.8",
-    "gulp-concat": "^2.3.4",
     "gulp-lab": "^1.0.0",
-    "gulp-livereload": "^2.1.1",
     "gulp-nodemon": "^1.0.4",
-    "gulp-order": "^1.1.1",
-    "gulp-ruby-sass": "^0.7.1",
     "lab": "^4.4.4",
     "request": "^2.44.0"
   }

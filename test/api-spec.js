@@ -24,7 +24,7 @@ lab.experiment('api', function () {
             };
             request(options, function(error, response){
                 var jwt = require('jsonwebtoken');
-                var token = jwt.decode(response.body, require('../secret'));
+                var token = jwt.decode(response.body, process.env.secret);
                 expect(token.hasOwnProperty('name')).to.equal(true);
                 expect(token.hasOwnProperty('email')).to.equal(true);
                 expect(token.hasOwnProperty('type')).to.equal(true);
@@ -47,7 +47,7 @@ lab.experiment('api', function () {
             };
             request(options, function(error, response){
                 var jwt = require('jsonwebtoken');
-                var token = jwt.decode(response.body, require('../secret'));
+                var token = jwt.decode(response.body, process.env.secret);
                 expect(token.hasOwnProperty('name')).to.equal(true);
                 expect(token.hasOwnProperty('email')).to.equal(true);
                 expect(token.hasOwnProperty('type')).to.equal(true);

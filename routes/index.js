@@ -1,5 +1,5 @@
 module.exports = [].concat(
-    require('./assets'),
     require('./user'),
+    require('./api'),
     require('./admin')
 );

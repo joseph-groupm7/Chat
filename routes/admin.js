@@ -1,12 +1,5 @@
 module.exports = [
 
-    {method: 'GET', path: '/chat/admin', handler: function(request, reply){
-        reply.file('./templates/admin.html');
-    }},
-    {method: 'GET', path: '/chat/admin/login', handler: function(request, reply){
-        reply.file('./templates/login.html');
-    }},
-
     //Admin token
     //invalid credentials: error
     //correct credentials: token
@@ -16,7 +9,7 @@ module.exports = [
 
         var jwt = require('jsonwebtoken');
 
-        jwt.verify(request.state.token, require('./../secret'), function(err, decoded){
+        jwt.verify(request.state.token, process.env.secret, function(err, decoded){
 
             if(err){
                 require('./../validate')(request.payload.email, request.payload.password, function(err, user){
@@ -31,7 +24,7 @@ module.exports = [
                                 email: user.email,
                                 type: 'admin'
                             },
-                            require('./../secret')
+                            process.env.secret
                         );
 
                         reply(token);

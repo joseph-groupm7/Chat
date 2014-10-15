@@ -1,30 +1,45 @@
-# Lobby API
+## Websocket Server
 
-## Creating a chat
+PORT: 3000
 
-event: lobby.chat
-message: (USER) must implement
+Endpoints:
+
+```
+POST /chat/admin/login
+with
+{email:'', password:''}
+returns
+error OR token
+```
+
+```
+POST /chat/user/login
+with
+{email:'', name:''}
+returns
+error OR token
+```
+
+```
+GET /chat/chats/{room_id}/messages
+with token cookie
+returns
+{messages:{}}
+```
+
+The token should be saved as a cookie named token for subsequent requests and connection to websocket server
+
+Websocket Events:
+
+### connection
+this is only used to build a Client object on the server from the token
+
+### lobby.chat
+pass token id of user to chat with, and a chat will be created with the current user and the selected user.
+
+### lobby.message
+pass object like:
 {
-    session_id: value
+    room_id:'',
+    text:''
 }
-
-success event: lobby.chat
-to: everyone in chat
-message: (CHAT)
-{
-    messages: ARRAY,
-    clients: ARRAY,
-    room: id
-}
-
-## Sending a message
-event: lobby.message
-message: (MESSAGE) must implement
-{
-    content: STRING,
-    room: id
-}
-
-success event: lobby.message
-to: everyone in chat
-message: STRING content

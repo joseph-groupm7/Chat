@@ -13,7 +13,7 @@ module.exports = [
                 email: request.payload.email,
                 type: 'user'
             }
-            , require('./../secret'));
+            , process.env.secret);
         reply(token);
     }}
 
