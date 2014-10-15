@@ -1,10 +1,12 @@
 angular.module('user', ['lobby', 'ngCookies']);
 
-angular.module('user').controller('UserController', function($scope, lobby, $cookies){
+angular.module('user').controller('UserController', function($scope, lobby, LoginService){
 
-    $cookies.name = 'user_name';
+    $scope.login = function(email){
+        LoginService.login(email);
+    };
 
-    $scope.chat = {};
+
 
     lobby.getMessages(room_id, function(messages){
         $scope.chat.messages = messages;

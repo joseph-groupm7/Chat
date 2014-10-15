@@ -11,7 +11,6 @@ angular.module('lobby', ['ngCookies']).service('lobby', function($rootScope, $co
     });
 
     socket.on('lobby.message', function(message){
-        console.log(message);
         $rootScope.activeChat.messages.push(message);
         $rootScope.$digest();
     });

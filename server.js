@@ -1,26 +1,10 @@
-var hapi = require('hapi');
+var Hapi = require('hapi');
 var routes = require('./routes');
 var socket = require('socket.io');
 var _ = require('lodash-node');
 var Lobby = require('./EasyChat/Lobby');
 
-var server = new hapi.Server(3000);
-
-//cookies
-server.pack.register({
-    plugin: require('yar'),
-    options: {
-        cookieOptions: {
-            isSecure: false,
-            password: 'seems secure'
-        }
-    }
-}, function(err){console.log(err)});
-
-//authentication
-server.pack.register(require('hapi-auth-basic'), function (err) {
-    server.auth.strategy('simple', 'basic', { validateFunc: require('./validate') });
-});
+var server = new Hapi.Server('localhost', 3000);
 
 //load routes
 routes.forEach(function(route){

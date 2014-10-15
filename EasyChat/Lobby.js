@@ -10,47 +10,21 @@ var cookies = require('./cookies');
 var socketioJwt   = require("socketio-jwt");
 
 function lobby(io){
-    /*
-    function(socket, next){
-
-    console.log(socket.handshake.headers.cookie);
-
-    //get name from querystring, type from url, session from cookie
-
-    //or just check for token, and if there get from that
-
-    var valid_socket = true;
-
-    var socketCookies = cookies.parse(socket.request.headers.cookie);
-
-    ['session'].every(function(prop){
-        if(!socketCookies.hasOwnProperty(prop)){
-            //console.log(prop);
-            valid_socket = false;
-        }
-    });
-
-    if(valid_socket){
-        next();
-    }
-
-}
-*/
 
     io.use(socketioJwt.authorize({
-        secret: 'example_secret',
+        secret: require('../secret'),
         handshake: true
     }));
 
     io.on('connection', function(socket){
 
-        console.log('hello! ', socket.decoded_token);
+        console.log(socket.handshake.query.token);
 
         var client = new Client(
             socket,
-            socket.request.headers.cookie.name,
-            socket.request.headers.cookie.type,
-            socket.request.headers.cookie.session
+            socket.decoded_token.name,
+            socket.decoded_token.type,
+            socket.handshake.query.token
         );
 
         //1. finds client in state and updates socket to the newly created one

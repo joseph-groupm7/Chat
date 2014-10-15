@@ -56,7 +56,7 @@ lab.experiment('api', function () {
             });
         });
 
-        it("should return failure if invalid passowrd", function (done) {
+        it("should return failure message if invalid password", function (done) {
             var options = {
                 method: 'POST',
                 url: 'http://localhost:3000/chat/admin/auth',
@@ -67,7 +67,9 @@ lab.experiment('api', function () {
                 }
             };
             request(options, function(error, response){
-                expect(response.body).to.equal('failure');
+                expect(response.body.error).to.equal(true);
+                expect(response.body.name).to.equal('InvalidCredentialsError');
+
                 done();
             });
         });
